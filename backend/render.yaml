@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: trailverse-backend
+    env: node
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: trailverse-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: REDIS_URL
+        fromService:
+          name: trailverse-redis
+          type: redis
+          property: connectionString
+
+databases:
+  - name: trailverse-db
+    plan: starter
+    databaseName: trailverse
+    user: trailverse_admin
+
+redis:
+  - name: trailverse-redis
+    plan: starter
+    ipAllowList: []

@@ -1,26 +1,301 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FAFAF8; /* Light Mode Background */
+  --foreground: #111827; /* Light Mode Primary Text */
+  --card-bg: #FFFFFF; /* Light Mode Cards */
+  --card-border: #E5E7EB; /* Light Mode Borders */
+  --primary: #14532D; /* Primary brand: Forest Green */
+  --primary-hover: #166534;
+  --secondary: #1E40AF; /* Secondary: Mountain Blue */
+  --accent: #F97316; /* Accent: Sunrise Orange */
+  --glow-color: rgba(20, 83, 45, 0.12);
 }
 
-@theme inline {
+.dark {
+  --background: #0B1120; /* Dark Mode Background */
+  --foreground: #F8FAFC; /* Dark Mode Primary Text */
+  --card-bg: #111827; /* Dark Mode Cards */
+  --card-border: #1E293B; /* Dark Mode Borders */
+  --primary: #14532D; /* Primary brand: Forest Green */
+  --primary-hover: #166534;
+  --secondary: #1E40AF; /* Secondary: Mountain Blue */
+  --accent: #F97316; /* Accent: Sunrise Orange */
+  --glow-color: rgba(16, 185, 129, 0.25);
+}
+
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-glow: var(--glow-color);
+  
+  /* Brand Specific Names */
+  --color-forest-green: #14532D;
+  --color-mountain-blue: #1E40AF;
+  --color-sunrise-orange: #F97316;
+
+  /* Premium Font Stack */
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-display: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), 'Fira Code', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Base Body Styles */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Headings use Outfit — geometric, modern, confident */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  font-weight: 800;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.875rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; font-weight: 700; }
+
+/* Labels, inputs, buttons — Plus Jakarta Sans */
+button, input, select, textarea, label, caption, small, .label-text {
+  font-family: var(--font-sans);
+  letter-spacing: -0.005em;
+}
+
+/* Filter section labels get a crisp uppercase tracking */
+.filter-label, .uppercase {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Glassmorphism Styles */
+.glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+}
+
+.glass-nav {
+  background: #FAFAF8; /* Fully opaque background matching the brand light background */
+  border-bottom: 1px solid var(--card-border);
+}
+
+.dark .glass-nav {
+  background: #0B1120; /* Fully opaque dark background matching the brand dark background */
+  border-bottom: 1px solid var(--card-border);
+}
+
+/* Premium Gradient Utilities */
+.text-gradient {
+  background: linear-gradient(135deg, #14532D 0%, #1E40AF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-orange {
+  background: linear-gradient(135deg, #f97316 0%, #f43f5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-premium {
+  background: linear-gradient(135deg, #14532D 0%, #1E40AF 100%); /* Hero Section Gradient: Forest Green → Mountain Blue */
+}
+
+.bg-gradient-adventure {
+  background: linear-gradient(135deg, #14532D 0%, #1E40AF 50%, #F97316 100%); /* Premium Adventure Gradient: Forest Green → Mountain Blue → Sunrise Orange */
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(180deg, #0B1120 0%, #070a14 100%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Hide Scrollbar */
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+/* Map Route Dash Animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -40;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-route {
+  stroke-dasharray: 8;
+  animation: dash 3s linear infinite;
 }
+
+/* Custom Pulse Animation */
+@keyframes custom-pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.animate-slow-pulse {
+  animation: custom-pulse 8s ease-in-out infinite;
+}
+
+/* Card Glow Effect */
+.card-glow {
+  box-shadow: 0 0 15px 1px var(--glow-color);
+  transition: box-shadow 0.3s ease;
+}
+
+.card-glow:hover {
+  box-shadow: 0 0 25px 4px var(--glow-color);
+}
+
+/* Mountain Waterfall Animations */
+.waterfall-stream {
+  stroke-dasharray: 40 120;
+  animation: flow-down 3s linear infinite;
+}
+.waterfall-stream-fast {
+  stroke-dasharray: 20 80;
+  animation: flow-down 1.8s linear infinite;
+}
+.waterfall-stream-slow {
+  stroke-dasharray: 30 100;
+  animation: flow-down 4.2s linear infinite;
+}
+
+@keyframes flow-down {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -160;
+  }
+}
+
+.animate-ripple-1 {
+  transform-origin: 650px 680px;
+  animation: ripple-out 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+.animate-ripple-2 {
+  transform-origin: 650px 680px;
+  animation: ripple-out 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  animation-delay: 0.8s;
+}
+.animate-ripple-3 {
+  transform-origin: 650px 680px;
+  animation: ripple-out 2.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+  animation-delay: 1.6s;
+}
+
+@keyframes ripple-out {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Typing Cursor Blink Animation */
+@keyframes cursor-blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+/* Ken Burns Slow Zoom Effect */
+@keyframes slow-zoom {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+.animate-ken-burns {
+  animation: slow-zoom 25s ease-in-out infinite;
+}
+
+/* Realistic Mist Drift Animation */
+@keyframes mist-drift {
+  0% {
+    transform: translateY(-10%) translateX(-2%) scale(0.95);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.35;
+  }
+  70% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(20%) translateX(2%) scale(1.05);
+    opacity: 0;
+  }
+}
+.animate-mist-slow {
+  animation: mist-drift 18s ease-in-out infinite;
+}
+.animate-mist-fast {
+  animation: mist-drift 12s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+

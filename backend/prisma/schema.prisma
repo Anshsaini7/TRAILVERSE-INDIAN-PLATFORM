@@ -1,0 +1,315 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ---------------- CUSTOM ENUMS ----------------
+
+enum Role {
+  USER
+  GUIDE
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
+}
+
+// ---------------- MODELS ----------------
+
+model User {
+  id            String          @id @default(uuid())
+  name          String
+  email         String          @unique
+  phone         String?
+  password      String
+  profile_image String?
+  role          Role            @default(USER)
+  suspended     Boolean         @default(false)
+  
+  // traveler profile expansions
+  username           String?         @unique
+  city               String?
+  bio                String?         @db.Text
+  completed_treks    Json?           // Json of completed trek IDs & date details
+  saved_treks        Json?           // Json of saved trek IDs
+  wishlist           Json?           // Json of wishlist trek IDs
+  achievement_badges Json?           // Json of badge IDs
+
+  created_at    DateTime        @default(now())
+  
+  // Relations
+  reviews       Review[]
+  bookings      Booking[]
+  posts         CommunityPost[]
+  comments      PostComment[]
+  likes         PostLike[]
+  stories       Story[]
+  notifications Notification[]
+  sent_messages     Message[]   @relation("sender")
+  received_messages Message[]   @relation("receiver")
+  followers     Follower[]      @relation("following")
+  following     Follower[]      @relation("follower")
+
+  @@map("users")
+}
+
+model Trek {
+  id                  String          @id @default(uuid())
+  trek_name           String
+  state               String
+  district            String
+  difficulty          String          // Easy, Medium, Hard, Extreme
+  altitude            Int             // in meters
+  distance            Float           // in km
+  duration            Int             // in days
+  best_season         String
+  minimum_temperature Float
+  maximum_temperature Float
+  oxygen_level        String          // e.g. "60% at Summit"
+  route_description   String          @db.Text
+  trek_images         Json            // String[] of image URLs
+  trek_videos         Json?           // String[] of video URLs
+  created_at          DateTime        @default(now())
+
+  // Relations
+  baseCamps           BaseCamp[]
+  weather             Weather?
+  companyTreks        CompanyTrek[]
+  reviews             Review[]
+  bookings            Booking[]
+
+  @@map("treks")
+}
+
+model BaseCamp {
+  id          String   @id @default(uuid())
+  trek_id     String
+  camp_name   String
+  altitude    Int      // in meters
+  facilities  Json     // String[] of amenities
+  coordinates Json     // { lat: Float, lon: Float }
+
+  // Relations
+  trek        Trek     @relation(fields: [trek_id], references: [id], onDelete: Cascade)
+
+  @@map("base_camps")
+}
+
+model Weather {
+  id                String   @id @default(uuid())
+  trek_id           String   @unique
+  temperature       Float
+  humidity          Float
+  weather_condition String
+  updated_at        DateTime @updatedAt
+
+  // Relations
+  trek              Trek     @relation(fields: [trek_id], references: [id], onDelete: Cascade)
+
+  @@map("weather")
+}
+
+model AdventureActivity {
+  id          String   @id @default(uuid())
+  category    String   // Rafting, Paragliding, etc.
+  title       String
+  description String   @db.Text
+  location    String
+  pricing     Float
+
+  @@map("adventure_activities")
+}
+
+model Company {
+  id                  String        @id @default(uuid())
+  company_name        String
+  logo                String?
+  website             String?
+  phone               String
+  email               String        @unique
+  address             String
+  verification_status Boolean       @default(false)
+  rating              Float         @default(0.0)
+
+  // Relations
+  companyTreks        CompanyTrek[]
+  bookings            Booking[]
+  verificationDocuments VerificationDocument[]
+
+  @@map("companies")
+}
+
+model CompanyTrek {
+  id              String   @id @default(uuid())
+  company_id      String
+  trek_id         String
+  package_price   Float
+  package_details Json     // Details like itinerary inclusion lists
+
+  // Relations
+  company         Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  trek            Trek     @relation(fields: [trek_id], references: [id], onDelete: Cascade)
+
+  @@unique([company_id, trek_id])
+  @@map("company_treks")
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  user_id    String
+  trek_id    String
+  rating     Int      // 1 to 5 stars
+  review     String   @db.Text
+  created_at DateTime @default(now())
+
+  // Relations
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  trek       Trek     @relation(fields: [trek_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, trek_id])
+  @@map("reviews")
+}
+
+model Booking {
+  id             String        @id @default(uuid())
+  user_id        String
+  company_id     String
+  trek_id        String
+  booking_status BookingStatus @default(PENDING)
+  payment_status PaymentStatus @default(UNPAID)
+  created_at     DateTime      @default(now())
+
+  // Relations
+  user           User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  company        Company       @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  trek           Trek          @relation(fields: [trek_id], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+model CommunityPost {
+  id         String   @id @default(uuid())
+  user_id    String
+  content    String   @db.Text
+  images     Json     // String[] of image URLs
+  created_at DateTime @default(now())
+
+  // Relations
+  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  comments   PostComment[]
+  likes      PostLike[]
+
+  @@map("community_posts")
+}
+
+// ---------------- NEW SOCIAL & VERIFICATION MODELS ----------------
+
+model Follower {
+  follower_id  String
+  following_id String
+  
+  follower     User   @relation("follower", fields: [follower_id], references: [id], onDelete: Cascade)
+  following    User   @relation("following", fields: [following_id], references: [id], onDelete: Cascade)
+
+  @@id([follower_id, following_id])
+  @@map("followers")
+}
+
+model PostLike {
+  user_id    String
+  post_id    String
+  
+  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post       CommunityPost @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, post_id])
+  @@map("post_likes")
+}
+
+model PostComment {
+  id         String        @id @default(uuid())
+  user_id    String
+  post_id    String
+  content    String        @db.Text
+  created_at DateTime      @default(now())
+
+  user       User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post       CommunityPost @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@map("post_comments")
+}
+
+model Story {
+  id         String   @id @default(uuid())
+  user_id    String
+  media_url  String
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("stories")
+}
+
+model TrekGroup {
+  id          String   @id @default(uuid())
+  group_name  String
+  description String   @db.Text
+  trek_id     String
+  created_by  String
+  created_at  DateTime @default(now())
+
+  @@map("trek_groups")
+}
+
+model VerificationDocument {
+  id            String   @id @default(uuid())
+  company_id    String
+  document_type String   // e.g. "GST", "LICENSE", "ID"
+  document_url  String
+  status        String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  created_at    DateTime @default(now())
+
+  company       Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+
+  @@map("verification_documents")
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  sender_id   String
+  receiver_id String
+  content     String   @db.Text
+  created_at  DateTime @default(now())
+
+  sender      User     @relation("sender", fields: [sender_id], references: [id], onDelete: Cascade)
+  receiver    User     @relation("receiver", fields: [receiver_id], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  user_id    String
+  title      String
+  content    String
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
