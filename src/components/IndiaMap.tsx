@@ -6,45 +6,7 @@ import { MapPin, Info, Navigation, Compass, Layers, ShieldCheck, HelpCircle, Sun
 import { motion, AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
-const STARTING_CITIES = [
-  { name: 'Andaman & Nicobar Islands (UT)', lat: 11.623, lon: 92.726 },
-  { name: 'Andhra Pradesh', lat: 16.506, lon: 80.648 },
-  { name: 'Arunachal Pradesh', lat: 27.084, lon: 93.605 },
-  { name: 'Assam', lat: 26.143, lon: 91.789 },
-  { name: 'Bihar', lat: 25.594, lon: 85.138 },
-  { name: 'Chandigarh (UT)', lat: 30.733, lon: 76.779 },
-  { name: 'Chhattisgarh', lat: 21.251, lon: 81.629 },
-  { name: 'Dadra & Nagar Haveli and Daman & Diu (UT)', lat: 20.397, lon: 72.832 },
-  { name: 'Delhi', lat: 28.613, lon: 77.209 },
-  { name: 'Goa', lat: 15.490, lon: 73.827 },
-  { name: 'Gujarat', lat: 23.215, lon: 72.636 },
-  { name: 'Haryana', lat: 29.058, lon: 76.085 },
-  { name: 'Himachal Pradesh', lat: 31.104, lon: 77.173 },
-  { name: 'Jammu & Kashmir (UT)', lat: 34.083, lon: 74.797 },
-  { name: 'Jharkhand', lat: 23.344, lon: 85.309 },
-  { name: 'Karnataka', lat: 12.971, lon: 77.594 },
-  { name: 'Kerala', lat: 8.524, lon: 76.936 },
-  { name: 'Ladakh (UT)', lat: 34.152, lon: 77.577 },
-  { name: 'Lakshadweep (UT)', lat: 10.566, lon: 72.641 },
-  { name: 'Madhya Pradesh', lat: 23.259, lon: 77.412 },
-  { name: 'Maharashtra', lat: 19.076, lon: 72.877 },
-  { name: 'Manipur', lat: 24.817, lon: 93.936 },
-  { name: 'Meghalaya', lat: 25.578, lon: 91.883 },
-  { name: 'Mizoram', lat: 23.730, lon: 92.717 },
-  { name: 'Nagaland', lat: 25.675, lon: 94.108 },
-  { name: 'Odisha', lat: 20.296, lon: 85.824 },
-  { name: 'Puducherry (UT)', lat: 11.941, lon: 79.808 },
-  { name: 'Punjab', lat: 31.326, lon: 75.576 },
-  { name: 'Rajasthan', lat: 26.912, lon: 75.787 },
-  { name: 'Sikkim', lat: 27.331, lon: 88.613 },
-  { name: 'Tamil Nadu', lat: 13.082, lon: 80.270 },
-  { name: 'Telangana', lat: 17.385, lon: 78.486 },
-  { name: 'Tripura', lat: 23.831, lon: 91.286 },
-  { name: 'Uttar Pradesh', lat: 26.846, lon: 80.946 },
-  { name: 'Uttarakhand', lat: 30.316, lon: 78.032 },
-  { name: 'West Bengal', lat: 22.572, lon: 88.363 }
-];
+import { STATE_DISTRICTS } from '../data/indianLocations';
 
 function getHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Earth radius in km
@@ -218,11 +180,31 @@ const GoogleWeatherIcon = ({ name, className = "w-8 h-8" }: { name: string; clas
   }
 };
 
+interface TransitConfig {
+  label: string;
+  icon: string;
+  multiplier: number;
+  speed: number; // in km/h
+  color: string;
+  dashArray?: string;
+}
+
+export const TRANSIT_MODES: Record<string, TransitConfig> = {
+  plane: { label: '✈️ Flight', icon: '✈️', multiplier: 1.0, speed: 750, color: '#3b82f6', dashArray: '8, 6' },
+  car: { label: '🚗 Car', icon: '🚗', multiplier: 1.35, speed: 70, color: '#f59e0b' },
+  bus: { label: '🚌 Bus', icon: '🚌', multiplier: 1.38, speed: 50, color: '#10b981' },
+  train: { label: '🚆 Train', icon: '🚆', multiplier: 1.42, speed: 65, color: '#ec4899' },
+  bike: { label: '🏍️ Bike', icon: '🏍️', multiplier: 1.32, speed: 45, color: '#8b5cf6' },
+  walking: { label: '🥾 Walking', icon: '🥾', multiplier: 1.18, speed: 5, color: '#ef4444', dashArray: '4, 4' }
+};
+
 
 export default function IndiaMap() {
   const [activeTab, setActiveTab] = useState<'treks' | 'camps' | 'operators' | 'sports'>('treks');
   const [selectedItem, setSelectedItem] = useState<any>(treks[0]); // Default selected item
-  const [startCityName, setStartCityName] = useState<string>('Delhi');
+  const [selectedState, setSelectedState] = useState<string>('Delhi');
+  const [selectedCityName, setSelectedCityName] = useState<string>('New Delhi (Capital)');
+  const [transitMode, setTransitMode] = useState<'plane' | 'bus' | 'train' | 'car' | 'bike' | 'walking'>('plane');
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [userClicked, setUserClicked] = useState<boolean>(false);
   const [expandedState, setExpandedState] = useState<string | null>(null);
@@ -463,17 +445,24 @@ export default function IndiaMap() {
     };
   }, [selectedMarker, selectedItem]);
 
-  const startingLocations = useMemo(() => {
-    const base = [...STARTING_CITIES];
-    if (currentLocation) {
-      return [currentLocation, ...base];
+  const statesList = useMemo(() => {
+    return Object.keys(STATE_DISTRICTS).sort();
+  }, []);
+
+  const citiesListForSelectedState = useMemo(() => {
+    if (selectedState === 'Detected Location' && currentLocation) {
+      return [currentLocation];
     }
-    return base;
-  }, [currentLocation]);
+    return STATE_DISTRICTS[selectedState] || [];
+  }, [selectedState, currentLocation]);
 
   const selectedStartCity = useMemo(() => {
-    return startingLocations.find(c => c.name === startCityName) || startingLocations[0];
-  }, [startCityName, startingLocations]);
+    if (selectedState === 'Detected Location' && currentLocation) {
+      return currentLocation;
+    }
+    const list = STATE_DISTRICTS[selectedState] || [];
+    return list.find(c => c.name === selectedCityName) || list[0] || { name: 'Delhi', lat: 28.613, lon: 77.209 };
+  }, [selectedState, selectedCityName, currentLocation]);
 
   const handleDetectLocation = () => {
     if (!navigator.geolocation) {
@@ -484,17 +473,20 @@ export default function IndiaMap() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        setCurrentLocation({
+        const loc = {
           name: 'My Current Location',
           lat: latitude,
           lon: longitude
-        });
-        setStartCityName('My Current Location');
+        };
+        setCurrentLocation(loc);
+        setSelectedState('Detected Location');
+        setSelectedCityName('My Current Location');
         setIsDetectingLocation(false);
+        setUserClicked(true);
       },
       (error) => {
         console.warn("Geolocation error:", error);
-        alert(`Failed to detect location: ${error.message}. Please select a starting city manually.`);
+        alert(`Failed to detect location: ${error.message}. Please select a state and city manually.`);
         setIsDetectingLocation(false);
       },
       { enableHighAccuracy: true, timeout: 5000 }
@@ -624,6 +616,12 @@ export default function IndiaMap() {
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     mapRef.current = map;
 
+    // Set up ResizeObserver to handle container layout changes smoothly
+    const resizeObserver = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    resizeObserver.observe(mapContainerRef.current);
+
     // Add Tile Layer (Google Hybrid default)
     const tileUrl = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
     tileLayerRef.current = L.tileLayer(tileUrl, {
@@ -635,12 +633,22 @@ export default function IndiaMap() {
     markerGroupRef.current = L.featureGroup().addTo(map);
 
     return () => {
+      resizeObserver.disconnect();
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
     };
   }, []);
+
+  // Force map layout recalculation on marker/tab updates to ensure no visual rendering lag
+  useEffect(() => {
+    if (mapRef.current) {
+      setTimeout(() => {
+        mapRef.current?.invalidateSize();
+      }, 100);
+    }
+  }, [selectedMarker, activeTab]);
 
   // Update Tile Layer Type
   useEffect(() => {
@@ -786,30 +794,32 @@ export default function IndiaMap() {
           [selectedStartCity.lat, selectedStartCity.lon],
           [selectedMarker.lat, selectedMarker.lon]
         ];
+        const transit = TRANSIT_MODES[transitMode] || TRANSIT_MODES.plane;
         routeLineRef.current = L.polyline(latlngs as any, {
-          color: '#3b82f6',
-          weight: 3.5,
-          dashArray: '8, 6',
+          color: transit.color,
+          weight: transitMode === 'walking' ? 2.5 : 4,
+          dashArray: transit.dashArray || undefined,
           opacity: 0.85
         }).addTo(map);
 
         // Midpoint distance badge
         const midLat = (selectedStartCity.lat + selectedMarker.lat) / 2;
         const midLon = (selectedStartCity.lon + selectedMarker.lon) / 2;
+        const transitDist = routeDistance * transit.multiplier;
         const distHtml = `
           <div style="
             background: rgba(15, 23, 42, 0.95);
-            color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.45);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 9px;
+            color: ${transit.color};
+            border: 1px solid ${transit.color}75;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 10px;
             font-weight: 900;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.35);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.45);
             white-space: nowrap;
             text-align: center;
           ">
-            ✈️ ${routeDistance.toLocaleString()} km
+            ${transit.icon} ${Math.round(transitDist).toLocaleString()} km
           </div>
         `;
         const distIcon = L.divIcon({
@@ -832,7 +842,7 @@ export default function IndiaMap() {
         map.setView([22.9734, 78.6569], 5);
       }
     }
-  }, [markers, selectedMarker, selectedStartCity, userClicked, routeDistance]);
+  }, [markers, selectedMarker, selectedStartCity, userClicked, routeDistance, transitMode]);
 
   const difficultyColor = (diff: string) => {
     switch (diff) {
@@ -1142,13 +1152,13 @@ export default function IndiaMap() {
                           {new Date().toLocaleDateString('en-GB').replace(/\//g, '-')} ({new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase()})
                         </span>
                       </div>
-                      <span className="text-[8px] bg-slate-200 dark:bg-slate-850 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded font-mono">
+                      <span className="text-[8px] bg-slate-200 dark:bg-slate-850 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded font-mono tracking-wider">
                         Real-time GPS
                       </span>
                     </div>
 
                     {isLoadingWeather ? (
-                      <div className="flex items-center justify-center py-6 gap-2 text-[10px] text-slate-450 dark:text-slate-400 animate-pulse font-mono">
+                      <div className="flex items-center justify-center py-6 gap-2 text-[10px] text-slate-450 dark:text-slate-400 animate-pulse font-mono tracking-wider">
                         <Compass className="h-4 w-4 animate-spin text-emerald-500" />
                         Querying meteorological telemetry...
                       </div>
@@ -1361,20 +1371,44 @@ export default function IndiaMap() {
                       </span>
                     </div>
 
-                    <div className="flex flex-col gap-1 font-bold">
-                      {/* Starting Location Select */}
-                      <div className="flex justify-between items-center gap-2">
-                        <span className="text-[10px] text-slate-400 uppercase tracking-wide">Starting Hub</span>
-                        <div className="flex items-center gap-1.5">
+                    <div className="flex flex-col gap-2.5 font-bold">
+                      {/* Starting State Select */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wide">Starting State / UT</span>
+                        <select
+                          value={selectedState}
+                          onChange={e => {
+                            setSelectedState(e.target.value);
+                            const cities = STATE_DISTRICTS[e.target.value] || [];
+                            if (cities.length > 0) {
+                              setSelectedCityName(cities[0].name);
+                            }
+                            setUserClicked(true);
+                          }}
+                          className="w-full sm:w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer font-bold text-slate-800 dark:text-slate-200"
+                        >
+                          {selectedState === 'Detected Location' && (
+                            <option value="Detected Location">📍 Detected Location</option>
+                          )}
+                          {statesList.map(st => (
+                            <option key={st} value={st}>{st}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Starting City / District Select */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wide">City / District</span>
+                        <div className="flex items-center gap-1.5 w-full sm:w-auto justify-end">
                           <select
-                            value={startCityName}
+                            value={selectedCityName}
                             onChange={e => {
-                              setStartCityName(e.target.value);
+                              setSelectedCityName(e.target.value);
                               setUserClicked(true);
                             }}
-                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer font-bold text-slate-800 dark:text-slate-250 max-w-[120px]"
+                            className="w-full sm:w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1.5 text-[11px] focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer font-bold text-slate-800 dark:text-slate-250"
                           >
-                            {startingLocations.map(c => (
+                            {citiesListForSelectedState.map(c => (
                               <option key={c.name} value={c.name}>{c.name}</option>
                             ))}
                           </select>
@@ -1384,8 +1418,8 @@ export default function IndiaMap() {
                             disabled={isDetectingLocation}
                             className={`p-1.5 rounded-lg border transition-all ${
                               isDetectingLocation 
-                                ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 animate-pulse'
-                                : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-blue-500 hover:bg-slate-200 dark:hover:bg-slate-700 hover:scale-105 cursor-pointer'
+                                ? 'bg-slate-100 dark:bg-slate-850 text-slate-400 animate-pulse'
+                                : 'bg-slate-100 dark:bg-slate-850 border-slate-200 dark:border-slate-700 text-blue-500 hover:bg-slate-200 dark:hover:bg-slate-750 hover:scale-105 cursor-pointer flex-shrink-0'
                             }`}
                             title="Detect My Location via GPS"
                           >
@@ -1394,15 +1428,81 @@ export default function IndiaMap() {
                         </div>
                       </div>
 
-                      {/* Distance Info Row */}
-                      <div className="flex justify-between items-center text-xs border-t border-slate-200/25 dark:border-slate-800/40 pt-1.5 mt-1">
-                        <span className="text-slate-400 font-medium">Transit Route Distance</span>
-                        <span className="text-blue-500 font-black text-sm">{routeDistance.toLocaleString()} km</span>
+                      {/* Transit Mode Selector Pills */}
+                      <div className="flex flex-col mt-1.5 border-t border-slate-200/25 dark:border-slate-800/40 pt-2">
+                        <span className="text-[10px] text-slate-400 uppercase tracking-wide mb-1.5">Select Transport Mode</span>
+                        <div className="grid grid-cols-3 gap-1.5 bg-slate-100 dark:bg-slate-900/60 p-1 rounded-xl border border-slate-200/50 dark:border-slate-800/50">
+                          {Object.entries(TRANSIT_MODES).map(([modeKey, config]) => {
+                            const dist = routeDistance * config.multiplier;
+                            const durationHrs = dist / config.speed;
+                            
+                            let durationText = '';
+                            if (durationHrs < 1) {
+                              durationText = `${Math.round(durationHrs * 60)}m`;
+                            } else if (durationHrs < 24) {
+                              const hrs = Math.floor(durationHrs);
+                              const mins = Math.round((durationHrs - hrs) * 60);
+                              durationText = `${hrs}h ${mins}m`;
+                            } else {
+                              const days = Math.floor(durationHrs / 24);
+                              const hrs = Math.round(durationHrs % 24);
+                              durationText = `${days}d ${hrs}h`;
+                            }
+
+                            return (
+                              <button
+                                key={modeKey}
+                                type="button"
+                                onClick={() => {
+                                  setTransitMode(modeKey as any);
+                                  setUserClicked(true);
+                                }}
+                                className={`flex flex-col items-center justify-center p-1.5 rounded-lg transition-all cursor-pointer ${
+                                  transitMode === modeKey
+                                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm border border-slate-200/55 dark:border-slate-800/45 scale-[1.03]'
+                                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+                                }`}
+                              >
+                                <span className="text-sm">{config.icon}</span>
+                                <span className="text-[8px] font-black uppercase mt-0.5 leading-none">{config.label.split(' ')[1]}</span>
+                                <span className="text-[8px] opacity-75 font-mono mt-0.5 leading-none">{Math.round(dist)} km</span>
+                                <span className="text-[8px] opacity-60 font-mono leading-none mt-0.5">{durationText}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
 
-                      {/* Travel Route Steps */}
+                      {/* Distance Info Row */}
+                      <div className="flex justify-between items-center text-xs border-t border-slate-200/25 dark:border-slate-800/40 pt-1.5 mt-1.5">
+                        <span className="text-slate-400 font-medium">Estimated Mode Distance</span>
+                        <span 
+                          style={{ color: TRANSIT_MODES[transitMode].color }}
+                          className="font-black text-sm transition-all duration-300"
+                        >
+                          {Math.round(routeDistance * TRANSIT_MODES[transitMode].multiplier).toLocaleString()} km
+                        </span>
+                      </div>
+
+                      {/* Travel Route Steps Description */}
                       <div className="text-[10px] leading-relaxed text-slate-400 mt-1 font-medium border-t border-slate-200/25 dark:border-slate-800/40 pt-1.5">
-                        Transit from <strong>{startCityName}</strong> directly to base camps around <strong>{selectedMarker.name}</strong>. Dynamic curved flight/road track plotted in blue.
+                        Transit from <strong>{selectedStartCity.name}</strong> to base camps around <strong>{selectedMarker.name}</strong> via <strong>{TRANSIT_MODES[transitMode].label.split(' ')[1]}</strong>. Estimated travel duration is <strong>{
+                          (() => {
+                            const dist = routeDistance * TRANSIT_MODES[transitMode].multiplier;
+                            const durationHrs = dist / TRANSIT_MODES[transitMode].speed;
+                            if (durationHrs < 1) {
+                              return `${Math.round(durationHrs * 60)} minutes`;
+                            } else if (durationHrs < 24) {
+                              const hrs = Math.floor(durationHrs);
+                              const mins = Math.round((durationHrs - hrs) * 60);
+                              return `${hrs} hours and ${mins} minutes`;
+                            } else {
+                              const days = Math.floor(durationHrs / 24);
+                              const hrs = Math.round(durationHrs % 24);
+                              return `${days} days and ${hrs} hours`;
+                            }
+                          })()
+                        }</strong>. Plotted in mode color code.
                       </div>
                     </div>
                   </div>
@@ -1463,7 +1563,9 @@ export default function IndiaMap() {
         <div ref={mapContainerRef} className="w-full h-full min-h-[550px] z-10" />
 
         {/* Google Map Type Selector */}
-        <div className="absolute right-6 bottom-6 flex gap-1 p-1 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg z-[1000] text-[10px] font-black">
+        <div className={`absolute right-6 flex gap-1 p-1 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-xl shadow-lg z-[1000] text-[10px] font-black transition-all duration-300 ${
+          selectedItem && selectedMarker ? 'bottom-56 sm:bottom-6' : 'bottom-6'
+        }`}>
           {[
             { id: 'hybrid', label: '🛰️ Satellite' },
             { id: 'roadmap', label: '🗺️ Map' },
@@ -1478,7 +1580,7 @@ export default function IndiaMap() {
                   : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
               }`}
             >
-              {type.label}
+               {type.label}
             </button>
           ))}
         </div>
@@ -1486,9 +1588,9 @@ export default function IndiaMap() {
         {/* Google Maps Route Navigation HUD */}
         {userClicked && selectedMarker && selectedStartCity && (
           <motion.div
-            initial={{ opacity: 0, y: -10, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            className="absolute top-6 left-1/2 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-[1000] px-4 py-2.5 flex items-center gap-3 text-xs text-slate-850 dark:text-slate-200 font-bold max-w-[90%] md:w-auto"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-6 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-[1000] px-4 py-2.5 flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-850 dark:text-slate-200 font-bold w-[calc(100%-3rem)] sm:w-auto max-w-[95%]"
           >
             <div className="flex items-center gap-1.5 min-w-0">
               <span className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0" />
@@ -1499,9 +1601,12 @@ export default function IndiaMap() {
               <span className="h-2 w-2 rounded-full bg-emerald-500 flex-shrink-0" />
               <span className="truncate max-w-[100px] md:max-w-[130px]">{selectedMarker.name}</span>
             </div>
-            <div className="border-l border-slate-200 dark:border-slate-800 pl-3 flex-shrink-0 flex items-center gap-1 text-[10px] text-blue-500">
-              <Navigation className="h-3 w-3 fill-current" />
-              <span>{routeDistance.toLocaleString()} km</span>
+            <div 
+              style={{ color: TRANSIT_MODES[transitMode].color }}
+              className="border-l border-slate-200 dark:border-slate-800 pl-3 flex-shrink-0 flex items-center gap-1.5 text-[10px] font-black"
+            >
+              <span>{TRANSIT_MODES[transitMode].icon}</span>
+              <span>{Math.round(routeDistance * TRANSIT_MODES[transitMode].multiplier).toLocaleString()} km</span>
             </div>
           </motion.div>
         )}
@@ -1514,7 +1619,9 @@ export default function IndiaMap() {
               setSelectedItem(null);
               setUserClicked(false);
             }}
-            className="absolute top-6 right-6 bg-slate-900/90 dark:bg-emerald-500/90 hover:scale-105 active:scale-95 text-white font-extrabold text-[10px] uppercase tracking-widest px-4 py-2.5 rounded-2xl border border-white/10 shadow-xl transition-all z-[1000] cursor-pointer flex items-center gap-1.5"
+            className={`absolute right-6 bg-slate-900/90 dark:bg-emerald-500/90 hover:scale-105 active:scale-95 text-white font-extrabold text-[10px] uppercase tracking-widest px-4 py-2.5 rounded-2xl border border-white/10 shadow-xl transition-all z-[1000] cursor-pointer flex items-center gap-1.5 transition-all duration-300 ${
+              userClicked && selectedStartCity ? 'top-20 sm:top-6' : 'top-6'
+            }`}
           >
             🌍 Show All Treks
           </button>
@@ -1525,14 +1632,14 @@ export default function IndiaMap() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="absolute top-6 left-6 w-56 bg-slate-950/85 backdrop-blur-md border border-emerald-500/35 rounded-2xl p-3 shadow-xl z-[1000] text-white font-sans pointer-events-none"
+            className="absolute bottom-6 left-6 right-6 sm:right-auto sm:w-56 bg-slate-950/85 backdrop-blur-md border border-emerald-500/35 rounded-2xl p-3 shadow-xl z-[1000] text-white font-sans pointer-events-none"
           >
             <div className="flex justify-between items-center mb-1.5">
               <span className="text-[9px] text-emerald-400 font-extrabold uppercase tracking-widest flex items-center gap-1">
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 SENTINEL TELEMETRY
               </span>
-              <span className="text-[8px] bg-emerald-500/25 text-emerald-300 px-1.5 py-0.5 rounded font-mono">
+              <span className="text-[8px] bg-emerald-500/25 text-emerald-300 px-1.5 py-0.5 rounded font-mono tracking-wider">
                 {selectedItem.altitude ? `${selectedItem.altitude}m` : 'N/A'}
               </span>
             </div>
@@ -1551,7 +1658,7 @@ export default function IndiaMap() {
                   <div className="w-1 h-1 bg-emerald-400 rounded-full opacity-70" />
                 </div>
               </div>
-              <div className="absolute bottom-1 left-1.5 text-[8px] bg-slate-900/90 px-1.5 py-0.5 rounded text-slate-400 font-mono">
+              <div className="absolute bottom-1 left-1.5 text-[8px] bg-slate-900/90 px-1.5 py-0.5 rounded text-slate-400 font-mono tracking-wider">
                 {selectedMarker.lat.toFixed(4)}° N | {selectedMarker.lon.toFixed(4)}° E
               </div>
             </div>
@@ -1568,19 +1675,19 @@ export default function IndiaMap() {
               {selectedItem.distance && (
                 <div className="flex justify-between items-center text-slate-400">
                   <span>Trek Length:</span>
-                  <span className="text-white font-mono">{selectedItem.distance} km</span>
+                  <span className="text-white font-mono tracking-wider">{selectedItem.distance} km</span>
                 </div>
               )}
               {userClicked && (
                 <div className="flex justify-between items-center text-slate-400">
                   <span>Transit GPS:</span>
-                  <span className="text-blue-400 font-extrabold font-mono">{routeDistance.toLocaleString()} km</span>
+                  <span className="text-blue-400 font-extrabold font-mono tracking-wider">{routeDistance.toLocaleString()} km</span>
                 </div>
               )}
               {weatherData && (
                 <div className="flex justify-between items-center text-slate-400 mt-0.5 border-t border-white/10 pt-0.5">
                   <span>Live Weather:</span>
-                  <span className="text-emerald-400 font-extrabold font-mono">
+                  <span className="text-emerald-400 font-extrabold font-mono tracking-wider">
                     {weatherData.temp}°C ({weatherData.conditionText})
                   </span>
                 </div>
