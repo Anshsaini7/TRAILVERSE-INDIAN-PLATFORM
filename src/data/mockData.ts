@@ -4859,57 +4859,9 @@ export const adventureActivities: AdventureActivity[] = [
   }
 ];
 
-export const forumPosts: ForumPost[] = [
-  {
-    id: 'f1',
-    title: 'How to tackle altitude sickness (AMS) on Roopkund Trek?',
-    author: 'Dr. Srinivas Rao',
-    avatar: '👨‍⚕️',
-    date: '2026-06-02',
-    category: 'Safety & Health',
-    replies: 18,
-    likes: 42,
-    content: 'Acclimatization is key. Drink 4-5 liters of water daily. Avoid rapid ascent. Carry Diamox after consulting a doctor, and immediately descend if you show symptoms of HAPE or HACE.'
-  },
-  {
-    id: 'f2',
-    title: 'Deciding between Kedarkantha and Harishchandragad for a December trek',
-    author: 'Neha Deshmukh',
-    avatar: '👩',
-    date: '2026-06-08',
-    category: 'General Discussion',
-    replies: 12,
-    likes: 19,
-    content: 'If you want deep snow, alpine forests, and a true peak climb, go for Kedarkantha in Uttarakhand. If you want historical caves, rocky forts, and a short weekend getaway from Mumbai, go for Harishchandragad!'
-  }
-];
+export const forumPosts: ForumPost[] = [];
 
-export const buddyRequests: BuddyRequest[] = [
-  {
-    id: 'b1',
-    name: 'Aman Preet',
-    avatar: '👨',
-    trekId: 'hampta-pass',
-    trekName: 'Hampta Pass Trek',
-    startDate: '2026-07-15',
-    groupSize: 6,
-    currentBuddies: 4,
-    genderPref: 'Co-ed',
-    description: 'Hey folks! We are a group of 4 looking for 2 more fun travelers to join our Hampta Pass booking with Bikat Adventures. We plan to explore Manali cafes post-trek.'
-  },
-  {
-    id: 'b2',
-    name: 'Preeti Sinha',
-    avatar: '👩',
-    trekId: 'chadar',
-    trekName: 'Chadar Frozen River Trek',
-    startDate: '2027-01-20',
-    groupSize: 8,
-    currentBuddies: 3,
-    genderPref: 'Female only',
-    description: 'Planning the epic Chadar trek in Jan 2027. Looking for fellow female adventure enthusiasts who want to prep together over the next few months. Fitness training starts now!'
-  }
-];
+export const buddyRequests: BuddyRequest[] = [];
 
 export const leaderboardUsers: LeaderboardUser[] = [
   { rank: 1, name: 'Tenzing Norgay Fan', avatar: '👨', altitudeGained: 24500, completedTreks: 12, points: 9800, badge: 'Himalayan Sherpa' },

@@ -32,26 +32,26 @@ export default function ForecastStrip({ forecast, maxDays = 7, className = '' }:
 
           return (
             <div key={i}
-              className="flex flex-col items-center rounded-2xl px-3 py-3 min-w-[90px] border border-white/10"
+              className="flex flex-col items-center rounded-2xl px-3 py-3 min-w-[90px] border border-slate-200 dark:border-white/10"
               style={{
                 background: i === 0
                   ? 'linear-gradient(160deg,rgba(16,185,129,0.18) 0%,rgba(59,130,246,0.10) 100%)'
-                  : 'rgba(255,255,255,0.04)',
+                  : 'var(--forecast-item-bg)',
                 boxShadow: i === 0 ? '0 0 0 1px rgba(16,185,129,0.3)' : 'none'
               }}>
               {/* Day name */}
-              <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">{day.dayName}</div>
-              <div className="text-[9px] text-slate-500 dark:text-slate-600 mb-1">{day.date}</div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">{day.dayName}</div>
+              <div className="text-[9px] text-slate-400 dark:text-slate-500 mb-1">{day.date}</div>
 
               {/* Icon */}
               <WeatherIcon name={day.conditionIcon} size="sm" />
 
               {/* Condition */}
-              <div className="text-[9px] font-semibold text-slate-400 text-center mt-1 leading-tight max-w-[72px]">{day.conditionText}</div>
+              <div className="text-[9px] font-semibold text-slate-600 dark:text-slate-400 text-center mt-1 leading-tight max-w-[72px]">{day.conditionText}</div>
 
               {/* Temperature bar */}
               <div className="relative w-2 mx-auto my-2" style={{ height: '60px' }}>
-                <div className="absolute inset-0 rounded-full bg-slate-700/30" />
+                <div className="absolute inset-0 rounded-full bg-slate-200 dark:bg-slate-700/30" />
                 <div className="absolute left-0 right-0 rounded-full"
                   style={{
                     top: `${barTop + 10}px`,

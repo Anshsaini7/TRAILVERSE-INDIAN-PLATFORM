@@ -18,12 +18,7 @@ export default function CommunityModule() {
   const [newStoryMedia, setNewStoryMedia] = useState('');
   const [newStoryCaption, setNewStoryCaption] = useState('');
   const [createStoryOpen, setCreateStoryOpen] = useState(false);
-  const [storiesList, setStoriesList] = useState([
-    { id: 's-1', user: 'Ananya Roy', username: 'ananya_expeditions', avatar: '🧗', media: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80', caption: 'Goechala view at sunrise!' },
-    { id: 's-2', user: 'Kabir Mehta', username: 'k_mehta', avatar: '🏕️', media: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80', caption: 'Extremely cold Kedarkantha summit push!' },
-    { id: 's-3', user: 'Arjun Majumdar', username: 'arjun_leader', avatar: '🧭', media: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80', caption: 'Camp 1 setups' },
-    { id: 's-4', user: 'Swathi C.', username: 'swathi_chatrapathy', avatar: '🦊', media: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80', caption: 'Roopkund lake skeleton climb!' }
-  ]);
+  const [storiesList, setStoriesList] = useState<any[]>([]);
 
   // Social Feed state
   const [createPostOpen, setCreatePostOpen] = useState(false);
@@ -31,35 +26,7 @@ export default function CommunityModule() {
   const [newPostMedia, setNewPostMedia] = useState('');
   const [selectedCommentsPostId, setSelectedCommentsPostId] = useState<string | null>(null);
   const [newCommentText, setNewCommentText] = useState('');
-  const [feedPosts, setFeedPosts] = useState([
-    {
-      id: 'fp-1',
-      author: 'Ananya Roy',
-      username: 'ananya_expeditions',
-      avatar: '🧗',
-      media: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
-      likes: 142,
-      likedByMe: false,
-      caption: 'Summit push at Roopkund! The lake is partially frozen but Mt. Trishul views are absolutely golden. 🔥🏔️',
-      comments: [
-        { id: 'c-1', user: 'Kabir Mehta', text: 'This looks insane! Safe climbing!' },
-        { id: 'c-2', user: 'Arjun Majumdar', text: 'Beautiful capture, Ananya!' }
-      ]
-    },
-    {
-      id: 'fp-2',
-      author: 'Kabir Mehta',
-      username: 'k_mehta',
-      avatar: '🏕️',
-      media: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
-      likes: 87,
-      likedByMe: false,
-      caption: 'Freezing at night but the morning sun is pure therapy. Solang Valley in December. ❄️🏕️',
-      comments: [
-        { id: 'c-3', user: 'Swathi C.', text: 'Are the trails fully snowed out?' }
-      ]
-    }
-  ]);
+  const [feedPosts, setFeedPosts] = useState<any[]>([]);
 
   // Buddy Finder states
   const [buddiesData, setBuddiesData] = useState(buddyRequests);
@@ -283,76 +250,84 @@ export default function CommunityModule() {
 
               {/* Feed Card Posts */}
               <div className="flex flex-col gap-6">
-                {feedPosts.map((post) => (
-                  <div key={post.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm card-glow">
-                    {/* Post Header */}
-                    <div className="p-4 flex justify-between items-center">
-                      <div className="flex items-center gap-3">
-                        <Link href={`/profile/${post.username}`} className="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg shrink-0 hover:scale-105 transition-transform">
-                          {post.avatar}
-                        </Link>
-                        <div>
-                          <Link href={`/profile/${post.username}`} className="font-extrabold text-slate-900 dark:text-white text-xs hover:text-emerald-500 transition-colors">
-                            {post.author}
+                {feedPosts.length > 0 ? (
+                  feedPosts.map((post) => (
+                    <div key={post.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm card-glow">
+                      {/* Post Header */}
+                      <div className="p-4 flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                          <Link href={`/profile/${post.username}`} className="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg shrink-0 hover:scale-105 transition-transform">
+                            {post.avatar}
                           </Link>
-                          <span className="text-[9px] text-slate-400 block font-semibold">@{post.username}</span>
+                          <div>
+                            <Link href={`/profile/${post.username}`} className="font-extrabold text-slate-900 dark:text-white text-xs hover:text-emerald-500 transition-colors">
+                              {post.author}
+                            </Link>
+                            <span className="text-[9px] text-slate-400 block font-semibold">@{post.username}</span>
+                          </div>
                         </div>
-                      </div>
-                      <span className="text-[9px] text-slate-400 font-extrabold uppercase">Expedition Post</span>
-                    </div>
-
-                    {/* Post Image Media */}
-                    <div className="relative h-96 w-full overflow-hidden bg-slate-950/20 border-y border-slate-100 dark:border-slate-800/60">
-                      <img src={post.media} alt="" className="object-cover h-full w-full" />
-                    </div>
-
-                    {/* Post Reactions Actions bar */}
-                    <div className="p-5 flex flex-col gap-3 font-semibold">
-                      <div className="flex justify-between items-center text-xs">
-                        <div className="flex items-center gap-4">
-                          <button 
-                            onClick={() => handleLikePost(post.id)}
-                            className="flex items-center gap-1 cursor-pointer hover:scale-110 transition-transform"
-                          >
-                            <Heart className={`h-5 w-5 ${post.likedByMe ? 'fill-rose-500 text-rose-500 animate-pulse' : 'text-slate-400'}`} />
-                            <strong className="text-slate-850 dark:text-slate-200">{post.likes} Likes</strong>
-                          </button>
-                          <button 
-                            onClick={() => setSelectedCommentsPostId(post.id)}
-                            className="flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform"
-                          >
-                            <MessageSquare className="h-5 w-5 text-slate-400" />
-                            <strong className="text-slate-850 dark:text-slate-200">{post.comments.length} Comments</strong>
-                          </button>
-                        </div>
-                        <span className="text-[9px] text-slate-450 block uppercase">1 hour ago</span>
+                        <span className="text-[9px] text-slate-400 font-extrabold uppercase">Expedition Post</span>
                       </div>
 
-                      {/* Post description caption */}
-                      <p className="text-xs leading-relaxed text-slate-550 dark:text-slate-400 mt-1">
-                        <Link href={`/profile/${post.username}`} className="font-black text-slate-900 dark:text-white mr-1.5">
-                          @{post.username}
-                        </Link>
-                        {post.caption}
-                      </p>
+                      {/* Post Image Media */}
+                      <div className="relative h-96 w-full overflow-hidden bg-slate-950/20 border-y border-slate-100 dark:border-slate-800/60">
+                        <img src={post.media} alt="" className="object-cover h-full w-full" />
+                      </div>
 
-                      {/* Snippet of comments */}
-                      {post.comments.length > 0 && (
-                        <div className="mt-2 border-t border-slate-50 dark:border-slate-800/40 pt-2 flex flex-col gap-1.5">
-                          {post.comments.slice(0, 2).map((c, i) => (
-                            <p key={i} className="text-[11px] text-slate-450">
-                              <span className="font-bold text-slate-800 dark:text-slate-200 mr-1.5">{c.user}:</span>
-                              {c.text}
-                            </p>
-                          ))}
-                          {post.comments.length > 2 && (
-                            <button onClick={() => setSelectedCommentsPostId(post.id)} className="text-[10px] font-black text-emerald-500 self-start mt-0.5">View all comments...</button>
-                          )}
+                      {/* Post Reactions Actions bar */}
+                      <div className="p-5 flex flex-col gap-3 font-semibold">
+                        <div className="flex justify-between items-center text-xs">
+                          <div className="flex items-center gap-4">
+                            <button 
+                              onClick={() => handleLikePost(post.id)}
+                              className="flex items-center gap-1 cursor-pointer hover:scale-110 transition-transform"
+                            >
+                              <Heart className={`h-5 w-5 ${post.likedByMe ? 'fill-rose-500 text-rose-500 animate-pulse' : 'text-slate-400'}`} />
+                              <strong className="text-slate-850 dark:text-slate-200">{post.likes} Likes</strong>
+                            </button>
+                            <button 
+                              onClick={() => setSelectedCommentsPostId(post.id)}
+                              className="flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform"
+                            >
+                              <MessageSquare className="h-5 w-5 text-slate-400" />
+                              <strong className="text-slate-850 dark:text-slate-200">{post.comments.length} Comments</strong>
+                            </button>
+                          </div>
+                          <span className="text-[9px] text-slate-455 block uppercase">Just now</span>
                         </div>
-                      )}
+
+                        {/* Post description caption */}
+                        <p className="text-xs leading-relaxed text-slate-550 dark:text-slate-400 mt-1">
+                          <Link href={`/profile/${post.username}`} className="font-black text-slate-900 dark:text-white mr-1.5">
+                            @{post.username}
+                          </Link>
+                          {post.caption}
+                        </p>
+
+                        {/* Snippet of comments */}
+                        {post.comments.length > 0 && (
+                          <div className="mt-2 border-t border-slate-50 dark:border-slate-800/40 pt-2 flex flex-col gap-1.5">
+                            {post.comments.slice(0, 2).map((c, i) => (
+                              <p key={i} className="text-[11px] text-slate-450">
+                                <span className="font-bold text-slate-800 dark:text-slate-200 mr-1.5">{c.user}:</span>
+                                {c.text}
+                              </p>
+                            ))}
+                            {post.comments.length > 2 && (
+                              <button onClick={() => setSelectedCommentsPostId(post.id)} className="text-[10px] font-black text-emerald-500 self-start mt-0.5">View all comments...</button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="h-64 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center text-slate-400 dark:text-slate-650 text-xs p-6 text-center">
+                    <Compass className="h-10 w-10 text-slate-300 dark:text-slate-705 stroke-1 animate-pulse mb-3" />
+                    <span className="font-extrabold text-sm text-slate-750 dark:text-slate-300">No adventure posts shared yet</span>
+                    <p className="mt-1 text-slate-400 dark:text-slate-500 max-w-xs">Be the first to share a moment from your climb by clicking "Share Photo".</p>
                   </div>
-                ))}
+                )}
               </div>
             </motion.div>
           )}
@@ -360,61 +335,69 @@ export default function CommunityModule() {
           {/* TAB 2: Buddy Finder */}
           {activeTab === 'buddies' && (
             <motion.div key="buddies" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {buddiesData.map((req) => {
-                const hasJoined = requestedBuddies[req.id];
-                const cleanUsername = req.name.toLowerCase().replace(/\s+/g, '_');
-                return (
-                  <div key={req.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col justify-between card-glow">
-                    <div>
-                      {/* Request Header */}
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                          <Link href={`/profile/${cleanUsername}`} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg shrink-0 hover:scale-105 transition-transform">
-                            {req.avatar}
-                          </Link>
-                          <div>
-                            <Link href={`/profile/${cleanUsername}`} className="text-sm font-extrabold text-slate-900 dark:text-white hover:text-emerald-500 transition-colors">
-                              {req.name}
+              {buddiesData.length > 0 ? (
+                buddiesData.map((req) => {
+                  const hasJoined = requestedBuddies[req.id];
+                  const cleanUsername = req.name.toLowerCase().replace(/\s+/g, '_');
+                  return (
+                    <div key={req.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col justify-between card-glow">
+                      <div>
+                        {/* Request Header */}
+                        <div className="flex justify-between items-start mb-4">
+                          <div className="flex items-center gap-3">
+                            <Link href={`/profile/${cleanUsername}`} className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg shrink-0 hover:scale-105 transition-transform">
+                              {req.avatar}
                             </Link>
-                            <span className="text-[10px] text-slate-400 block font-semibold">GENDER PREF: {req.genderPref.toUpperCase()}</span>
+                            <div>
+                              <Link href={`/profile/${cleanUsername}`} className="text-sm font-extrabold text-slate-900 dark:text-white hover:text-emerald-500 transition-colors">
+                                {req.name}
+                              </Link>
+                              <span className="text-[10px] text-slate-400 block font-semibold">GENDER PREF: {req.genderPref.toUpperCase()}</span>
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-bold bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded border border-emerald-500/20">
+                            {req.currentBuddies} / {req.groupSize} Joined
+                          </span>
+                        </div>
+
+                        {/* Travel details */}
+                        <div className="bg-slate-50 dark:bg-slate-955 p-4 rounded-2xl border border-slate-100 dark:border-slate-850 text-xs font-semibold text-slate-550 dark:text-slate-400 flex flex-col gap-2 mb-4">
+                          <div className="flex items-center gap-2">
+                            <Compass className="h-4 w-4 text-emerald-500" />
+                            <span>Trek: <strong className="text-slate-850 dark:text-slate-200">{req.trekName}</strong></span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4 text-emerald-500" />
+                            <span>Start Date: <strong className="text-slate-855 dark:text-slate-200">{req.startDate}</strong></span>
                           </div>
                         </div>
-                        <span className="text-[10px] font-bold bg-emerald-500/10 text-emerald-600 px-2 py-0.5 rounded border border-emerald-500/20">
-                          {req.currentBuddies} / {req.groupSize} Joined
-                        </span>
+
+                        <p className="text-xs text-slate-500 dark:text-slate-405 leading-relaxed font-medium mb-6">
+                          "{req.description}"
+                        </p>
                       </div>
 
-                      {/* Travel details */}
-                      <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-850 text-xs font-semibold text-slate-550 dark:text-slate-400 flex flex-col gap-2 mb-4">
-                        <div className="flex items-center gap-2">
-                          <Compass className="h-4 w-4 text-emerald-500" />
-                          <span>Trek: <strong className="text-slate-850 dark:text-slate-200">{req.trekName}</strong></span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-emerald-500" />
-                          <span>Start Date: <strong className="text-slate-855 dark:text-slate-200">{req.startDate}</strong></span>
-                        </div>
-                      </div>
-
-                      <p className="text-xs text-slate-500 dark:text-slate-405 leading-relaxed font-medium mb-6">
-                        "{req.description}"
-                      </p>
+                      <button
+                        onClick={() => handleJoinRequest(req.id)}
+                        disabled={hasJoined}
+                        className={`w-full py-2.5 rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer ${
+                          hasJoined
+                            ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed border border-slate-200 dark:border-slate-700/50'
+                            : 'bg-slate-900 text-white dark:bg-emerald-500 hover:bg-emerald-650'
+                        }`}
+                      >
+                        {hasJoined ? 'Request Sent ✓' : 'Request to Join Group'}
+                      </button>
                     </div>
-
-                    <button
-                      onClick={() => handleJoinRequest(req.id)}
-                      disabled={hasJoined}
-                      className={`w-full py-2.5 rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer ${
-                        hasJoined
-                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed border border-slate-200 dark:border-slate-700/50'
-                          : 'bg-slate-900 text-white dark:bg-emerald-500 hover:bg-emerald-650'
-                      }`}
-                    >
-                      {hasJoined ? 'Request Sent ✓' : 'Request to Join Group'}
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <div className="col-span-full h-64 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center text-slate-400 dark:text-slate-600 text-xs p-6 text-center">
+                  <Users className="h-10 w-10 text-slate-350 dark:text-slate-700 stroke-1 animate-pulse mb-3" />
+                  <span className="font-extrabold text-sm text-slate-750 dark:text-slate-300">No buddy requests active</span>
+                  <p className="mt-1 text-slate-450 dark:text-slate-500 max-w-xs">Looking for trail companions? Post a request or start your own!</p>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -434,40 +417,48 @@ export default function CommunityModule() {
 
               {/* Forum post rows */}
               <div className="flex flex-col gap-4">
-                {forumThreads.map((post) => (
-                  <div key={post.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col gap-3 font-medium">
-                    <div className="flex justify-between items-start gap-4">
-                      <div>
-                        <span className="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-450 px-2 py-0.5 rounded uppercase tracking-wider">
-                          {post.category}
-                        </span>
-                        <h4 className="text-sm font-extrabold text-slate-950 dark:text-white mt-2 hover:text-emerald-500 cursor-pointer transition-colors">
-                          {post.title}
-                        </h4>
+                {forumThreads.length > 0 ? (
+                  forumThreads.map((post) => (
+                    <div key={post.id} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl shadow-sm flex flex-col gap-3 font-medium">
+                      <div className="flex justify-between items-start gap-4">
+                        <div>
+                          <span className="text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-450 px-2 py-0.5 rounded uppercase tracking-wider">
+                            {post.category}
+                          </span>
+                          <h4 className="text-sm font-extrabold text-slate-955 dark:text-white mt-2 hover:text-emerald-500 cursor-pointer transition-colors">
+                            {post.title}
+                          </h4>
+                        </div>
+                        <div className="flex gap-4 text-xs text-slate-400">
+                          <span className="flex items-center gap-1">
+                            <MessageSquare className="h-4 w-4" />
+                            {post.replies}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Heart className="h-4 w-4" />
+                            {post.likes}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex gap-4 text-xs text-slate-400">
-                        <span className="flex items-center gap-1">
-                          <MessageSquare className="h-4 w-4" />
-                          {post.replies}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Heart className="h-4 w-4" />
-                          {post.likes}
-                        </span>
+
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                        {post.content}
+                      </p>
+
+                      <div className="flex items-center gap-2 border-t border-slate-100 dark:border-slate-855/50 pt-3 text-[10px] text-slate-400">
+                        <span>Posted by <strong className="text-slate-800 dark:text-slate-250 font-bold">{post.author}</strong></span>
+                        <span>&bull;</span>
+                        <span>{post.date}</span>
                       </div>
                     </div>
-
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-                      {post.content}
-                    </p>
-
-                    <div className="flex items-center gap-2 border-t border-slate-100 dark:border-slate-855/50 pt-3 text-[10px] text-slate-400">
-                      <span>Posted by <strong className="text-slate-800 dark:text-slate-250 font-bold">{post.author}</strong></span>
-                      <span>&bull;</span>
-                      <span>{post.date}</span>
-                    </div>
+                  ))
+                ) : (
+                  <div className="h-64 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col items-center justify-center text-slate-450 dark:text-slate-550 text-xs p-6 text-center">
+                    <MessagesSquare className="h-10 w-10 text-slate-300 dark:text-slate-700 stroke-1 animate-pulse mb-3" />
+                    <span className="font-extrabold text-sm text-slate-750 dark:text-slate-300">No active forum threads</span>
+                    <p className="mt-1 text-slate-400 dark:text-slate-500 max-w-xs">Have a question about trails, gear, or safety? Click "Ask Question" to start a discussion.</p>
                   </div>
-                ))}
+                )}
               </div>
             </motion.div>
           )}

@@ -46,8 +46,8 @@ function TypingEffect({ words }: { words: string[] }) {
   }, [currentText, isDeleting, currentWordIndex, words]);
 
   return (
-    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 font-black text-5xl sm:text-7xl md:text-8xl tracking-tight py-2 relative select-none">
-      {currentText}
+    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 font-black text-5xl sm:text-7xl md:text-8xl tracking-tight py-2 relative select-none whitespace-nowrap">
+      {currentText || '\u200b'}
       <span className="inline-block w-[3px] md:w-[6px] h-[0.8em] bg-gradient-to-b from-emerald-400 to-cyan-400 ml-2 animate-blink align-middle" />
     </span>
   );
@@ -102,21 +102,21 @@ export default function Home() {
           <img
             src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80"
             alt="Mountain backdrop"
-            className="w-full h-full object-cover brightness-50 dark:brightness-40 transform scale-105 transition-transform duration-10000"
+            className="w-full h-full object-cover opacity-25 dark:opacity-100 brightness-[1.1] dark:brightness-40 transform scale-105 transition-transform duration-10000"
           />
           {/* Animated SVG Wind Particles Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950/45 to-background z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-white/30 to-background dark:from-slate-950/20 dark:via-slate-950/45 dark:to-background z-10" />
         </div>
 
         {/* Hero Content Panel */}
-        <div className="relative z-20 mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8 flex flex-col items-center">
+        <div className="relative z-20 mx-auto w-full max-w-5xl px-4 text-center sm:px-6 lg:px-8 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-4 py-1.5 text-xs font-bold text-emerald-400 border border-emerald-500/30 mb-6 backdrop-blur-md"
+            className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 px-4 py-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 dark:border-emerald-500/30 mb-6 backdrop-blur-md"
           >
-            <Compass className="h-4 w-4 animate-spin-slow text-emerald-400" />
+            <Compass className="h-4 w-4 animate-spin-slow text-emerald-600 dark:text-emerald-400" />
             INDIA'S ULTIMATE ADVENTURE PLATFORM
           </motion.div>
 
@@ -124,10 +124,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl font-black tracking-tight text-white sm:text-6xl md:text-7xl leading-tight"
+            className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-6xl md:text-7xl leading-tight"
           >
             Explore India's Wildest <br />
-            <span className="inline-block mt-2 min-h-[1.2em] leading-none">
+            <span className="inline-block mt-2 min-h-[1.2em] leading-none whitespace-nowrap">
               <TypingEffect words={adventureWords} />
             </span>
           </motion.h1>
@@ -136,7 +136,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.4 }}
-            className="mt-6 text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed"
+            className="mt-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed font-semibold"
           >
             Discover routes, compare IMF-certified operators, plan trails with AI, and book safety-verified treks.
           </motion.p>
@@ -151,13 +151,13 @@ export default function Home() {
           >
             {/* Row 1: Trek Name Input */}
             <div className="relative">
-              <Search className="absolute left-4 top-3.5 h-5 w-5 text-slate-400" />
+              <Search className="absolute left-4 top-3.5 h-5 w-5 text-slate-400 dark:text-slate-500" />
               <input
                 type="text"
                 placeholder="Search trek by name (e.g. Roopkund, Kedarkantha)..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full bg-slate-900/40 dark:bg-slate-950/50 text-white rounded-2xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-white/5 placeholder-slate-400 transition-all"
+                className="w-full bg-slate-100/85 dark:bg-slate-950/50 text-slate-800 dark:text-white rounded-2xl pl-12 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 border border-slate-200 dark:border-white/5 placeholder-slate-400 dark:placeholder-slate-500 transition-all"
               />
             </div>
 
@@ -167,53 +167,53 @@ export default function Home() {
               <select
                 value={state}
                 onChange={e => setState(e.target.value)}
-                className="bg-slate-900/40 dark:bg-slate-950/50 text-white rounded-xl px-3 py-2.5 focus:outline-none border border-white/5 cursor-pointer font-semibold"
+                className="bg-slate-100/85 dark:bg-slate-950/50 text-slate-800 dark:text-white rounded-xl px-3 py-2.5 focus:outline-none border border-slate-200 dark:border-white/5 cursor-pointer font-semibold"
               >
-                <option value="" className="text-slate-900">State (All)</option>
-                <option value="Uttarakhand" className="text-slate-900">Uttarakhand</option>
-                <option value="Himachal Pradesh" className="text-slate-900">Himachal Pradesh</option>
-                <option value="Ladakh" className="text-slate-900">Ladakh</option>
-                <option value="Sikkim" className="text-slate-900">Sikkim</option>
-                <option value="West Bengal" className="text-slate-900">West Bengal</option>
-                <option value="Karnataka" className="text-slate-900">Karnataka</option>
-                <option value="Maharashtra" className="text-slate-900">Maharashtra</option>
+                <option value="" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">State (All)</option>
+                <option value="Uttarakhand" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Uttarakhand</option>
+                <option value="Himachal Pradesh" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Himachal Pradesh</option>
+                <option value="Ladakh" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Ladakh</option>
+                <option value="Sikkim" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Sikkim</option>
+                <option value="West Bengal" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">West Bengal</option>
+                <option value="Karnataka" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Karnataka</option>
+                <option value="Maharashtra" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Maharashtra</option>
               </select>
 
               {/* Difficulty Dropdown */}
               <select
                 value={difficulty}
                 onChange={e => setDifficulty(e.target.value)}
-                className="bg-slate-900/40 dark:bg-slate-950/50 text-white rounded-xl px-3 py-2.5 focus:outline-none border border-white/5 cursor-pointer font-semibold"
+                className="bg-slate-100/85 dark:bg-slate-950/50 text-slate-800 dark:text-white rounded-xl px-3 py-2.5 focus:outline-none border border-slate-200 dark:border-white/5 cursor-pointer font-semibold"
               >
-                <option value="" className="text-slate-900">Difficulty (All)</option>
-                <option value="Easy" className="text-slate-900">Easy</option>
-                <option value="Medium" className="text-slate-900">Medium</option>
-                <option value="Hard" className="text-slate-900">Hard</option>
-                <option value="Extreme" className="text-slate-900">Extreme</option>
+                <option value="" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Difficulty (All)</option>
+                <option value="Easy" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Easy</option>
+                <option value="Medium" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Medium</option>
+                <option value="Hard" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Hard</option>
+                <option value="Extreme" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Extreme</option>
               </select>
 
               {/* Duration Dropdown */}
               <select
                 value={duration}
                 onChange={e => setDuration(e.target.value)}
-                className="bg-slate-900/40 dark:bg-slate-950/50 text-white rounded-xl px-3 py-2.5 focus:outline-none border border-white/5 cursor-pointer font-semibold"
+                className="bg-slate-100/85 dark:bg-slate-950/50 text-slate-800 dark:text-white rounded-xl px-3 py-2.5 focus:outline-none border border-slate-200 dark:border-white/5 cursor-pointer font-semibold"
               >
-                <option value="" className="text-slate-900">Duration (All)</option>
-                <option value="short" className="text-slate-900">1 - 4 Days</option>
-                <option value="medium" className="text-slate-900">5 - 7 Days</option>
-                <option value="long" className="text-slate-900">8+ Days</option>
+                <option value="" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Duration (All)</option>
+                <option value="short" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">1 - 4 Days</option>
+                <option value="medium" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">5 - 7 Days</option>
+                <option value="long" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">8+ Days</option>
               </select>
 
               {/* Budget Dropdown */}
               <select
                 value={budget}
                 onChange={e => setBudget(e.target.value)}
-                className="bg-slate-900/40 dark:bg-slate-950/50 text-white rounded-xl px-3 py-2.5 focus:outline-none border border-white/5 cursor-pointer font-semibold"
+                className="bg-slate-100/85 dark:bg-slate-950/50 text-slate-800 dark:text-white rounded-xl px-3 py-2.5 focus:outline-none border border-slate-200 dark:border-white/5 cursor-pointer font-semibold"
               >
-                <option value="" className="text-slate-900">Budget (All)</option>
-                <option value="low" className="text-slate-900">Under ₹5,000</option>
-                <option value="mid" className="text-slate-900">₹5,000 - ₹12,000</option>
-                <option value="high" className="text-slate-900">₹12,000+</option>
+                <option value="" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Budget (All)</option>
+                <option value="low" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">Under ₹5,000</option>
+                <option value="mid" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">₹5,000 - ₹12,000</option>
+                <option value="high" className="text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-900">₹12,000+</option>
               </select>
             </div>
 
@@ -230,13 +230,13 @@ export default function Home() {
       </section>
 
       {/* ── LIVE CONDITIONS SECTION ── */}
-      <section className="py-12 bg-slate-950 border-y border-slate-800/60">
+      <section className="py-12 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-6 items-start">
             {/* Left: Location + Clock + Current Weather */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">🌍 Live Conditions</span>
+                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">🌍 Live Conditions</span>
                 {userLocation && (
                   <span className="text-[10px] text-slate-500 flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
@@ -249,16 +249,16 @@ export default function Home() {
                   showDate 
                   showTimezone 
                   className="flex-shrink-0" 
-                  textColorClass="text-slate-100 dark:text-slate-100"
-                  dateColorClass="text-slate-400 dark:text-slate-400"
-                  timezoneColorClass="text-emerald-400 dark:text-emerald-400"
+                  textColorClass="text-slate-900 dark:text-slate-100"
+                  dateColorClass="text-slate-500 dark:text-slate-400"
+                  timezoneColorClass="text-emerald-600 dark:text-emerald-400"
                 />
                 {userWeather && (
-                  <div className="flex items-center gap-3 bg-white/5 rounded-2xl px-4 py-3 border border-white/8">
+                  <div className="flex items-center gap-3 bg-slate-100/50 dark:bg-white/5 rounded-2xl px-4 py-3 border border-slate-200 dark:border-white/8">
                     <WeatherIcon name={userWeather.conditionIcon} size="md" />
                     <div>
-                      <div className="text-3xl font-black text-white">{formatTemp(userWeather.temp)}</div>
-                      <div className="text-xs text-slate-300">{userWeather.conditionText}</div>
+                      <div className="text-3xl font-black text-slate-900 dark:text-white">{formatTemp(userWeather.temp)}</div>
+                      <div className="text-xs text-slate-650 dark:text-slate-300">{userWeather.conditionText}</div>
                       <div className="text-[10px] text-slate-500 mt-0.5">Feels {formatTemp(userWeather.feelsLike)} · 💧{userWeather.humidity}% · 💨{userWeather.windSpeed} km/h</div>
                     </div>
                   </div>

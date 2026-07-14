@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #FAFAF8; /* Light Mode Background */
   --foreground: #111827; /* Light Mode Primary Text */
@@ -10,6 +12,7 @@
   --secondary: #1E40AF; /* Secondary: Mountain Blue */
   --accent: #F97316; /* Accent: Sunrise Orange */
   --glow-color: rgba(20, 83, 45, 0.12);
+  --forecast-item-bg: rgba(0, 0, 0, 0.03);
 }
 
 .dark {
@@ -22,6 +25,7 @@
   --secondary: #1E40AF; /* Secondary: Mountain Blue */
   --accent: #F97316; /* Accent: Sunrise Orange */
   --glow-color: rgba(16, 185, 129, 0.25);
+  --forecast-item-bg: rgba(255, 255, 255, 0.04);
 }
 
 @theme {

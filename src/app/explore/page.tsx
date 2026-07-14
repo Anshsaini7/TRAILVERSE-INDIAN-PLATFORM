@@ -136,7 +136,7 @@ function ExploreClient() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         
         {/* DESKTOP FILTER SIDEBAR — Redesigned */}
-        <aside className="hidden lg:flex flex-col gap-7 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-6 rounded-3xl h-fit shadow-sm">
+        <aside className="hidden lg:flex flex-col gap-7 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-6 pr-4 rounded-3xl h-fit shadow-sm sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto">
           
           {/* Header */}
           <div className="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800">
