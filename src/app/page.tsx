@@ -336,37 +336,6 @@ export default function Home() {
 
       {/* TRENDING TREKS SECTION */}
       <section className="py-20 bg-white dark:bg-slate-900 relative overflow-hidden">
-        {/* Animated Mountain & Waterfall SVG Backdrop */}
-        <div className="absolute inset-0 pointer-events-none opacity-45 dark:opacity-20 z-0 flex items-center justify-center">
-          <svg className="w-full h-full min-w-[1000px] max-w-7xl" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-             {/* Mountain 1 (Left background) */}
-             <path d="M-100,600 L200,300 L450,550 L600,450 L800,650" stroke="currentColor" className="text-slate-100 dark:text-slate-800/60" strokeWidth="3" />
-             
-             {/* Mountain 2 (Right foreground / Waterfall source) */}
-             <path d="M400,700 L650,250 L950,550 L1100,400 L1300,650" stroke="currentColor" className="text-slate-150 dark:text-slate-800" strokeWidth="3" />
-             
-             {/* Cliff rock outline for Waterfall */}
-             <path d="M640,255 L640,680 M660,255 L660,680" stroke="currentColor" className="text-slate-200/50 dark:text-slate-800/40" strokeWidth="2" strokeDasharray="5,5" />
-             
-             {/* Flowing Water Streams */}
-             <path d="M650,250 L650,680" stroke="url(#waterGrad)" strokeWidth="6" strokeLinecap="round" className="waterfall-stream" />
-             <path d="M646,260 L646,650" stroke="url(#waterGrad)" strokeWidth="3" strokeLinecap="round" className="waterfall-stream-fast" />
-             <path d="M654,280 L654,670" stroke="url(#waterGrad)" strokeWidth="3" strokeLinecap="round" className="waterfall-stream-slow" />
-             
-             {/* Ripple rings at the base (650, 680) */}
-             <ellipse cx="650" cy="680" rx="10" ry="4" stroke="currentColor" className="text-emerald-450 dark:text-emerald-500 animate-ripple-1" strokeWidth="1.5" />
-             <ellipse cx="650" cy="680" rx="20" ry="8" stroke="currentColor" className="text-cyan-400 dark:text-cyan-500/85 animate-ripple-2" strokeWidth="1.5" />
-             <ellipse cx="650" cy="680" rx="30" ry="12" stroke="currentColor" className="text-cyan-300/40 dark:text-cyan-600/40 animate-ripple-3" strokeWidth="1" />
-             
-             <defs>
-               <linearGradient id="waterGrad" x1="650" y1="250" x2="650" y2="680" gradientUnits="userSpaceOnUse">
-                 <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
-                 <stop offset="60%" stopColor="#06b6d4" stopOpacity="0.8" />
-                 <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.15" />
-               </linearGradient>
-             </defs>
-          </svg>
-        </div>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-4">
