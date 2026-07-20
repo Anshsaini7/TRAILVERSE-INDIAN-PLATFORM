@@ -46,7 +46,7 @@ function TypingEffect({ words }: { words: string[] }) {
   }, [currentText, isDeleting, currentWordIndex, words]);
 
   return (
-    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 font-black text-5xl sm:text-7xl md:text-8xl tracking-tight py-2 relative select-none whitespace-nowrap">
+    <span className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-emerald-300 to-cyan-400 font-black text-4xl sm:text-6xl md:text-7xl tracking-tight py-2 relative select-none whitespace-nowrap">
       {currentText || '\u200b'}
       <span className="inline-block w-[3px] md:w-[6px] h-[0.8em] bg-gradient-to-b from-emerald-400 to-cyan-400 ml-2 animate-blink align-middle" />
     </span>
