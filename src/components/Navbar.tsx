@@ -135,6 +135,7 @@ export default function Navbar() {
     { label: 'Live Tracker', path: '/tracker' },
     { label: 'Compare', path: '/compare' },
     { label: 'Calculator', path: '/cost-calculator' },
+    { label: 'Weight Planner', path: '/weight-calculator' },
     { label: 'Community', path: '/community' },
     ...((mounted && user?.role === 'ADMIN') ? [{ label: 'Admin', path: '/admin' }] : []),
     ...((mounted && user?.role === 'GUIDE') ? [{ label: 'Operator Portal', path: '/company-dashboard' }] : []),
@@ -210,7 +211,8 @@ export default function Navbar() {
                   { label: '🤖 AI Planner', path: '/ai-planner' },
                   { label: '🗺️ Route Planner', path: '/route-planner' },
                   { label: '📊 Compare Treks', path: '/compare' },
-                  { label: '💰 Cost Calculator', path: '/cost-calculator' }
+                  { label: '💰 Cost Calculator', path: '/cost-calculator' },
+                  { label: '🎒 Weight Calculator', path: '/weight-calculator' }
                 ].map((item) => {
                   const isActive = pathname === item.path;
                   return (

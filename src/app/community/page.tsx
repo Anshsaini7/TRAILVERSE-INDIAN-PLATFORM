@@ -307,7 +307,7 @@ export default function CommunityModule() {
                         {/* Snippet of comments */}
                         {post.comments.length > 0 && (
                           <div className="mt-2 border-t border-slate-50 dark:border-slate-800/40 pt-2 flex flex-col gap-1.5">
-                            {post.comments.slice(0, 2).map((c, i) => (
+                            {post.comments.slice(0, 2).map((c: any, i: number) => (
                               <p key={i} className="text-[11px] text-slate-450">
                                 <span className="font-bold text-slate-800 dark:text-slate-200 mr-1.5">{c.user}:</span>
                                 {c.text}
@@ -699,7 +699,7 @@ export default function CommunityModule() {
                   {/* Comments lists */}
                   <div className="flex flex-col gap-3.5 overflow-y-auto max-h-60 mt-2 pr-1 scrollbar-thin">
                     {currentPost.comments.length > 0 ? (
-                      currentPost.comments.map((c, i) => (
+                      currentPost.comments.map((c: any, i: number) => (
                         <div key={i} className="flex gap-2.5 items-start text-xs border-b border-slate-50 dark:border-slate-800/40 pb-2.5">
                           <span className="h-7 w-7 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sm shrink-0">🧗</span>
                           <div>
