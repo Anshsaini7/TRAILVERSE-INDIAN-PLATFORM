@@ -199,6 +199,71 @@ export const TRANSIT_MODES: Record<string, TransitConfig> = {
 };
 
 
+function generateWindingRoute(
+  startLat: number,
+  startLon: number,
+  endLat: number,
+  endLon: number,
+  transitMode: string
+): [number, number][] {
+  if (transitMode === 'plane') {
+    return [
+      [startLat, startLon],
+      [endLat, endLon]
+    ];
+  }
+
+  const points: [number, number][] = [];
+  const segments = 30; // Detailed winding turns
+  
+  const dLat = endLat - startLat;
+  const dLon = endLon - startLon;
+  const distanceDeg = Math.sqrt(dLat * dLat + dLon * dLon);
+
+  const length = distanceDeg || 1;
+  const perpLat = -dLon / length;
+  const perpLon = dLat / length;
+
+  let waveFactor = 0.08;
+  let frequency = 6;
+  
+  if (transitMode === 'walking') {
+    waveFactor = 0.12;
+    frequency = 12;
+  } else if (transitMode === 'train') {
+    waveFactor = 0.04;
+    frequency = 3;
+  } else {
+    waveFactor = 0.08;
+    frequency = 8;
+  }
+
+  const amplitude = distanceDeg * waveFactor;
+
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    
+    if (i === 0) {
+      points.push([startLat, startLon]);
+    } else if (i === segments) {
+      points.push([endLat, endLon]);
+    } else {
+      const envelope = Math.sin(t * Math.PI);
+      const wave = (
+        Math.sin(t * Math.PI * frequency) * 0.65 +
+        Math.cos(t * Math.PI * (frequency * 1.8)) * 0.25 +
+        Math.sin(t * Math.PI * (frequency * 2.8)) * 0.1
+      ) * envelope;
+
+      const lat = startLat + t * dLat + perpLat * wave * amplitude;
+      const lon = startLon + t * dLon + perpLon * wave * amplitude;
+      points.push([lat, lon]);
+    }
+  }
+
+  return points;
+}
+
 export default function IndiaMap() {
   const [activeTab, setActiveTab] = useState<'treks' | 'camps' | 'operators' | 'sports'>('treks');
   const [selectedItem, setSelectedItem] = useState<any>(treks[0]); // Default selected item
@@ -790,10 +855,13 @@ export default function IndiaMap() {
           .bindTooltip(`📍 Start: ${selectedStartCity.name}`, { permanent: false, direction: 'top' });
 
         // Draw Route Line
-        const latlngs = [
-          [selectedStartCity.lat, selectedStartCity.lon],
-          [selectedMarker.lat, selectedMarker.lon]
-        ];
+        const latlngs = generateWindingRoute(
+          selectedStartCity.lat,
+          selectedStartCity.lon,
+          selectedMarker.lat,
+          selectedMarker.lon,
+          transitMode
+        );
         const transit = TRANSIT_MODES[transitMode] || TRANSIT_MODES.plane;
         routeLineRef.current = L.polyline(latlngs as any, {
           color: transit.color,
