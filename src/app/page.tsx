@@ -363,6 +363,57 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PLATFORM ACHIEVEMENTS & ECO-STATISTICS */}
+      <section className="py-20 bg-slate-50 dark:bg-slate-950 border-y border-slate-150/40 dark:border-slate-850/40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-[10px] text-emerald-500 font-extrabold uppercase tracking-widest block">TRAILVERSE IMPACT</span>
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white mt-1">Empowering Indian Trekking</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+              We connect adventure seekers with verified operators, promoting safety, community, and responsible eco-tourism.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Stat 1 */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-3xl text-center hover:shadow-md transition-all group hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto text-xl mb-4 group-hover:scale-110 transition-transform">
+                🏔️
+              </div>
+              <div className="text-3xl font-black text-slate-900 dark:text-white" style={{ fontFamily: 'var(--font-display)' }}>80+</div>
+              <div className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-wider">Himalayan Trails</div>
+            </div>
+
+            {/* Stat 2 */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-3xl text-center hover:shadow-md transition-all group hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-500 flex items-center justify-center mx-auto text-xl mb-4 group-hover:scale-110 transition-transform">
+                🪪
+              </div>
+              <div className="text-3xl font-black text-slate-900 dark:text-white" style={{ fontFamily: 'var(--font-display)' }}>100%</div>
+              <div className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-wider">Certified Guides</div>
+            </div>
+
+            {/* Stat 3 */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-3xl text-center hover:shadow-md transition-all group hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl mb-4 group-hover:scale-110 transition-transform">
+                👥
+              </div>
+              <div className="text-3xl font-black text-slate-900 dark:text-white" style={{ fontFamily: 'var(--font-display)' }}>12,000+</div>
+              <div className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-wider">Active Explorers</div>
+            </div>
+
+            {/* Stat 4 */}
+            <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-6 rounded-3xl text-center hover:shadow-md transition-all group hover:-translate-y-1">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center mx-auto text-xl mb-4 group-hover:scale-110 transition-transform">
+                🌱
+              </div>
+              <div className="text-3xl font-black text-slate-900 dark:text-white" style={{ fontFamily: 'var(--font-display)' }}>Zero</div>
+              <div className="text-xs font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-wider">Waste Initiative</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* VERIFIED SAFETY / OPERATOR BANNER */}
       <section className="py-20 bg-gradient-premium text-white relative overflow-hidden">
         {/* Decorative background glow circles */}

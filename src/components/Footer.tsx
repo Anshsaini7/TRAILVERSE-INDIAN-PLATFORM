@@ -67,9 +67,9 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Ecosystem</h3>
             <ul className="space-y-2.5 text-sm">
               <li><Link href="/ai-planner" className="hover:text-emerald-400 transition-colors">AI Adventure Planner</Link></li>
+              <li><Link href="/cost-calculator" className="hover:text-emerald-400 transition-colors">Expedition Cost Calculator</Link></li>
+              <li><Link href="/weight-calculator" className="hover:text-emerald-400 transition-colors">Gear Weight Calculator</Link></li>
               <li><Link href="/community" className="hover:text-emerald-400 transition-colors">Trek Buddy Matcher</Link></li>
-              <li><Link href="/community" className="hover:text-emerald-400 transition-colors">Discussion Forums</Link></li>
-              <li><Link href="/blog" className="hover:text-emerald-400 transition-colors">Gear & Health Blog</Link></li>
             </ul>
           </div>
 
