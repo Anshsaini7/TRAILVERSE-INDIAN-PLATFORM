@@ -158,13 +158,9 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <motion.div 
-              whileHover={{ rotate: 15 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-premium text-white shadow-md"
-            >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-premium text-white shadow-md">
               <Compass className="h-6 w-6" />
-            </motion.div>
+            </div>
             <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Trail<span className="text-emerald-500">Verse</span>
               <span className="text-xs font-semibold text-emerald-400 align-super ml-1">IN</span>
