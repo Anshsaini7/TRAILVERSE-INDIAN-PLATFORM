@@ -216,7 +216,7 @@ export const treks: Trek[] = [
     baseCamp: 'Lohajung',
     baseCampDetails: 'Lohajung is located in Chamoli district. It is a scenic village with tea houses, hotels, and mobile connectivity (BNSL/Jio). Accessible via Dehradun/Kathgodam.',
     rating: 4.8,
-    startingPrice: 13500,
+    startingPrice: 9500,
     image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
@@ -296,7 +296,7 @@ export const treks: Trek[] = [
     baseCamp: 'Sankri',
     baseCampDetails: 'Sankri is a charming village inside Govind Wildlife Sanctuary. It has plenty of hotels, home stays, and mobile networks (Jio/Airtel). Start point for multiple treks.',
     rating: 4.9,
-    startingPrice: 8500,
+    startingPrice: 6000,
     image: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80',
@@ -370,7 +370,7 @@ export const treks: Trek[] = [
     baseCamp: 'Jobra',
     baseCampDetails: 'Jobra is located 1 hour drive from Manali. Surrounded by lush pine trees and flowing rivers. No cellular connectivity beyond Jobra.',
     rating: 4.7,
-    startingPrice: 9900,
+    startingPrice: 7500,
     image: 'https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=800&q=80',
@@ -512,7 +512,7 @@ export const treks: Trek[] = [
     baseCamp: 'Manebhanjan / Chitrey',
     baseCampDetails: 'Chitrey is a small village near the Indo-Nepal border, featuring homestays, Buddhist stupas, and local tea stalls. Access via Darjeeling.',
     rating: 4.6,
-    startingPrice: 9500,
+    startingPrice: 8500,
     image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
@@ -582,7 +582,7 @@ export const treks: Trek[] = [
     baseCamp: 'Subrahmanya',
     baseCampDetails: 'Subrahmanya is a popular temple town in Sullia. Standard hotels, lodges, and restaurants are abundant. Excellent mobile connectivity.',
     rating: 4.7,
-    startingPrice: 3500,
+    startingPrice: 2500,
     image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'
