@@ -296,10 +296,10 @@ export const treks: Trek[] = [
     baseCampDetails: 'Sankri is a charming village inside Govind Wildlife Sanctuary. It has plenty of hotels, home stays, and mobile networks (Jio/Airtel). Start point for multiple treks.',
     rating: 4.9,
     startingPrice: 6000,
-    image: 'https://images.unsplash.com/photo-1618331835717-8016f122c1db?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1618331835717-8016f122c1db?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     overview: 'Kedarkantha is arguably India\'s most famous winter trek. Famous for its pine forests blanketed in deep snow, beautiful camp sites, and an incredibly rewarding summit climb that offers a 360-degree panorama of the Garhwal Himalayas (including Swargarohini, Bandarpoonch, and Black Peak).',
@@ -370,9 +370,9 @@ export const treks: Trek[] = [
     baseCampDetails: 'Jobra is located 1 hour drive from Manali. Surrounded by lush pine trees and flowing rivers. No cellular connectivity beyond Jobra.',
     rating: 4.7,
     startingPrice: 7500,
-    image: 'https://images.unsplash.com/photo-1596761372166-5b4c42d7ed1f?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
     images: [
-      'https://images.unsplash.com/photo-1596761372166-5b4c42d7ed1f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
@@ -3976,9 +3976,8 @@ export const treks: Trek[] = [
     baseCampDetails: 'Yuksom is the first capital of Sikkim and the historic gateway to the Kangchenjunga biosphere. It sits at 1,780m in West Sikkim, ~120 km from Gangtok.',
     rating: 4.9,
     startingPrice: 24000,
-    image: 'https://images.unsplash.com/photo-1585136917228-d79f3bce0dca?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
     images: [
-      'https://images.unsplash.com/photo-1585136917228-d79f3bce0dca?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80'
     ],
