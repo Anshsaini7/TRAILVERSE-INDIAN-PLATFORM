@@ -217,10 +217,10 @@ export const treks: Trek[] = [
     baseCampDetails: 'Lohajung is located in Chamoli district. It is a scenic village with tea houses, hotels, and mobile connectivity (BNSL/Jio). Accessible via Dehradun/Kathgodam.',
     rating: 4.8,
     startingPrice: 9500,
-    image: 'https://images.unsplash.com/photo-1589553460730-0eb5be396a55?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://i.pinimg.com/736x/c8/0b/0b/c80b0b21160b9e67337c4e76d38432a0.jpg',
     images: [
-      'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1589553460730-0eb5be396a55?auto=format&fit=crop&w=800&q=80'
+      'https://i.pinimg.com/736x/c8/0b/0b/c80b0b21160b9e67337c4e76d38432a0.jpg',
+      'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Mock placeholder
     overview: 'Roopkund is a mystery lake nestled high in the Garhwal Himalayas. The trek takes you through majestic oak forests, vast alpine meadows (Ali & Bedni Bugyal), and snow-covered glaciers, culminating at a glacial lake containing human skeletons dating back to the 9th century.',
