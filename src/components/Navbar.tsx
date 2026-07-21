@@ -18,6 +18,7 @@ export default function Navbar() {
   const [navWeather, setNavWeather] = useState<{ temp: number; icon: string } | null>(null);
   const [clockVal, setClockVal] = useState({ date: '', time: '' });
   const [mounted, setMounted] = useState(false);
+  const [isWidgetHovered, setIsWidgetHovered] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -389,7 +390,10 @@ export default function Navbar() {
       </AnimatePresence>
 
       {/* ── Fixed Bottom-Left Weather + Clock Widget ── */}
-      <div
+      <motion.div
+        onMouseEnter={() => setIsWidgetHovered(true)}
+        onMouseLeave={() => setIsWidgetHovered(false)}
+        layout
         style={{
           position: 'fixed',
           bottom: '20px',
@@ -402,62 +406,76 @@ export default function Navbar() {
           boxShadow: '0 8px 32px 0 rgba(31,38,135,0.08), 0 1px 2px 0 rgba(0,0,0,0.05)',
           backdropFilter: 'blur(12px)',
           borderRadius: '9999px',
-          padding: '6px 16px',
+          padding: '6px 14px',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '10px',
           userSelect: 'none',
-          transition: 'all 0.3s ease'
+          cursor: 'pointer',
+          overflow: 'hidden',
+          maxWidth: '500px',
+          transition: 'background-color 0.3s ease, border-color 0.3s ease'
         }}
-        className="hover:scale-[1.02] shadow-lg"
+        className="shadow-lg"
       >
-        {/* Weather section */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ fontSize: '20px', lineHeight: 1 }}>
+        {/* Weather section (Always visible) */}
+        <motion.div layout className="flex items-center gap-1.5">
+          <span style={{ fontSize: '18px', lineHeight: 1 }}>
             {navWeather ? navWeather.icon : '🌡️'}
           </span>
           <span style={{
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 800,
             color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
             letterSpacing: '-0.2px'
           }}>
             {navWeather ? `${navWeather.temp}°C` : '—°C'}
           </span>
-        </div>
+        </motion.div>
 
-        {/* Divider */}
-        <div style={{ width: '1px', height: '14px', background: theme === 'dark' ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.5)' }} />
+        {/* Expanded contents (Only visible on hover) */}
+        <AnimatePresence>
+          {isWidgetHovered && (
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 'auto', opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              className="flex items-center gap-2.5 overflow-hidden whitespace-nowrap"
+            >
+              {/* Divider */}
+              <div style={{ width: '1px', height: '12px', background: theme === 'dark' ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.5)' }} />
 
-        {/* Date */}
-        <div style={{
-          fontFamily: 'sans-serif',
-          fontSize: '12px',
-          fontWeight: 700,
-          color: theme === 'dark' ? '#94a3b8' : '#64748b',
-          letterSpacing: '0.02em',
-          whiteSpace: 'nowrap'
-        }}>
-          {mounted ? (clockVal.date || '11-06-2026') : '11-06-2026'}
-        </div>
+              {/* Date */}
+              <div style={{
+                fontFamily: 'sans-serif',
+                fontSize: '11px',
+                fontWeight: 700,
+                color: theme === 'dark' ? '#94a3b8' : '#64748b',
+                letterSpacing: '0.02em'
+              }}>
+                {mounted ? (clockVal.date || '11-06-2026') : '11-06-2026'}
+              </div>
 
-        {/* Divider */}
-        <div style={{ width: '1px', height: '14px', background: theme === 'dark' ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.5)' }} />
+              {/* Divider */}
+              <div style={{ width: '1px', height: '12px', background: theme === 'dark' ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.5)' }} />
 
-        {/* Time */}
-        <div style={{
-          fontFamily: 'monospace',
-          fontSize: '13px',
-          fontWeight: 800,
-          letterSpacing: '0.04em',
-          background: 'linear-gradient(90deg,#10b981,#3b82f6)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          whiteSpace: 'nowrap'
-        }}>
-          {mounted ? (clockVal.time || '04:12:00 PM') : '04:12:00 PM'}
-        </div>
-      </div>
+              {/* Time */}
+              <div style={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                fontWeight: 800,
+                letterSpacing: '0.04em',
+                background: 'linear-gradient(90deg,#10b981,#3b82f6)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>
+                {mounted ? (clockVal.time || '04:12:00 PM') : '04:12:00 PM'}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </header>
   );
 }
