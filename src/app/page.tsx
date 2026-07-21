@@ -230,36 +230,45 @@ export default function Home() {
       </section>
 
       {/* ── LIVE CONDITIONS SECTION ── */}
-      <section className="py-12 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800/60">
+      <section className="py-6 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-6 items-start">
-            {/* Left: Location + Clock + Current Weather */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">🌍 Live Conditions</span>
+          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+            {/* Left: Location + Clock + Current Weather in a unified compact row */}
+            <div className="flex-1 min-w-0 w-full lg:w-auto">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Live Conditions
+                </span>
                 {userLocation && (
                   <span className="text-[10px] text-slate-500 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
+                    <MapPin className="w-3 h-3 text-slate-400" />
                     {userLocation.city}, {userLocation.state}
                   </span>
                 )}
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
+              <div className="flex flex-wrap items-center gap-4 bg-slate-50 dark:bg-slate-900/40 rounded-2xl p-3.5 border border-slate-200 dark:border-white/5 w-full sm:w-fit">
                 <LiveClock 
+                  compact
                   showDate 
-                  showTimezone 
+                  showTimezone={false}
                   className="flex-shrink-0" 
-                  textColorClass="text-slate-900 dark:text-slate-100"
-                  dateColorClass="text-slate-500 dark:text-slate-400"
-                  timezoneColorClass="text-emerald-600 dark:text-emerald-400"
+                  textColorClass="text-slate-900 dark:text-slate-100 font-mono text-lg font-black tracking-tight"
+                  dateColorClass="text-slate-500 dark:text-slate-400 text-[10px] font-semibold"
                 />
+                
+                {/* Vertical Separator */}
+                <div className="hidden sm:block w-px h-8 bg-slate-200 dark:bg-slate-800" />
+
                 {userWeather && (
-                  <div className="flex items-center gap-3 bg-slate-100/50 dark:bg-white/5 rounded-2xl px-4 py-3 border border-slate-200 dark:border-white/8">
-                    <WeatherIcon name={userWeather.conditionIcon} size="md" />
+                  <div className="flex items-center gap-3">
+                    <WeatherIcon name={userWeather.conditionIcon} size="sm" />
                     <div>
-                      <div className="text-3xl font-black text-slate-900 dark:text-white">{formatTemp(userWeather.temp)}</div>
-                      <div className="text-xs text-slate-650 dark:text-slate-300">{userWeather.conditionText}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">Feels {formatTemp(userWeather.feelsLike)} · 💧{userWeather.humidity}% · 💨{userWeather.windSpeed} km/h</div>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-xl font-black text-slate-900 dark:text-white leading-none">{formatTemp(userWeather.temp)}</span>
+                        <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{userWeather.conditionText}</span>
+                      </div>
+                      <div className="text-[10px] text-slate-450 dark:text-slate-500 mt-0.5">Feels {formatTemp(userWeather.feelsLike)} · 💧{userWeather.humidity}% · 💨{userWeather.windSpeed} km/h</div>
                     </div>
                   </div>
                 )}
@@ -267,8 +276,8 @@ export default function Home() {
             </div>
             {/* Right: Forecast Strip */}
             {userForecast.length > 0 && (
-              <div className="flex-1 min-w-0 w-full">
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">{forecastDays}-Day Forecast</div>
+              <div className="w-full lg:w-auto lg:max-w-xl">
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5 px-1">{forecastDays}-Day Forecast</div>
                 <ForecastStrip forecast={userForecast} maxDays={forecastDays} />
               </div>
             )}
