@@ -10,6 +10,7 @@ interface LiveClockProps {
   textColorClass?: string;
   dateColorClass?: string;
   timezoneColorClass?: string;
+  fontSize?: string;
 }
 
 export default function LiveClock({ 
@@ -19,7 +20,8 @@ export default function LiveClock({
   className = '',
   textColorClass = '',
   dateColorClass = '',
-  timezoneColorClass = ''
+  timezoneColorClass = '',
+  fontSize
 }: LiveClockProps) {
   const { timeFormat } = useWeather();
   const [now, setNow] = useState<Date | null>(null);
@@ -69,7 +71,7 @@ export default function LiveClock({
     return (
       <div className={`flex items-center gap-3 ${className}`}>
         <div className="text-center">
-          <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: '20px', letterSpacing: '0.04em' }}
+          <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: fontSize || '20px', letterSpacing: '0.04em' }}
             className={textColorClass || 'text-slate-800 dark:text-white'}>{timeStr}</div>
           {showDate && (
             <div className={`text-[10px] font-semibold mt-0.5 ${dateColorClass || 'text-slate-400 dark:text-slate-500'}`}>
@@ -88,7 +90,7 @@ export default function LiveClock({
           {dayName}, {date} {month} {year}
         </div>
       )}
-      <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: '36px', letterSpacing: '0.06em', lineHeight: 1 }}
+      <div style={{ fontFamily: 'monospace', fontWeight: 900, fontSize: fontSize || '36px', letterSpacing: '0.06em', lineHeight: 1 }}
         className={`tabular-nums ${textColorClass || 'text-slate-800 dark:text-white'}`}>
         {timeStr}
       </div>

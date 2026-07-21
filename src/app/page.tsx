@@ -233,8 +233,29 @@ export default function Home() {
       <section className="py-6 bg-white dark:bg-slate-950 border-y border-slate-200 dark:border-slate-800/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-            {/* Left: Location + Clock + Current Weather in a unified compact row */}
-            <div className="flex-1 min-w-0 w-full lg:w-auto">
+            {/* Mobile Only: Compact Ticker */}
+            <div className="flex sm:hidden items-center justify-between w-full bg-slate-50 dark:bg-slate-900/30 rounded-xl px-3 py-2 border border-slate-200/50 dark:border-white/5 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+              <div className="flex items-center gap-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>{userWeather ? `${formatTemp(userWeather.temp)} · ${userWeather.conditionText}` : 'Live weather'}</span>
+              </div>
+              <LiveClock 
+                compact
+                showDate={false}
+                showTimezone={false}
+                fontSize="11px"
+                textColorClass="text-slate-500 dark:text-slate-450 font-mono font-bold"
+              />
+              {userLocation && (
+                <div className="flex items-center gap-0.5 text-slate-400 dark:text-slate-500 max-w-[120px] truncate">
+                  <MapPin className="w-3 h-3 text-slate-400/80" />
+                  <span>{userLocation.city}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Desktop/Tablet Only: Location + Clock + Current Weather in a unified compact row */}
+            <div className="hidden sm:block flex-1 min-w-0 w-full lg:w-auto">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -274,9 +295,9 @@ export default function Home() {
                 )}
               </div>
             </div>
-            {/* Right: Forecast Strip */}
+            {/* Right: Forecast Strip (Hidden on mobile) */}
             {userForecast.length > 0 && (
-              <div className="w-full lg:w-auto lg:max-w-xl">
+              <div className="hidden sm:block w-full lg:w-auto lg:max-w-xl">
                 <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5 px-1">{forecastDays}-Day Forecast</div>
                 <ForecastStrip forecast={userForecast} maxDays={forecastDays} />
               </div>

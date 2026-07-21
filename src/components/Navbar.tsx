@@ -416,7 +416,7 @@ export default function Navbar() {
           maxWidth: '500px',
           transition: 'background-color 0.3s ease, border-color 0.3s ease'
         }}
-        className="shadow-lg"
+        className="hidden sm:flex shadow-lg"
       >
         {/* Weather section (Always visible) */}
         <motion.div layout className="flex items-center gap-1.5">
