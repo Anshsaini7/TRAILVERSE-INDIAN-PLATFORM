@@ -1959,9 +1959,9 @@ export const treks: Trek[] = [
     baseCampDetails: 'Yulla Village (Yulla Khas) is located in the Kinnaur district of Himachal Pradesh. A remote village with traditional wooden houses, apple orchards, and limited cellular connectivity (BSNL only).',
     rating: 4.7,
     startingPrice: 11000,
-    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.hive.blog/DQmQby9NtzJgvDAam4cEu7tpSq2PAciGwvyQoSwKfsEXqGZ/IMG20210626160947_Original.jpg',
     images: [
-      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80'
+      'https://images.hive.blog/DQmQby9NtzJgvDAam4cEu7tpSq2PAciGwvyQoSwKfsEXqGZ/IMG20210626160947_Original.jpg'
     ],
     overview: 'Yulla Kanda is famous for holding the highest Krishna Temple in the world, situated next to a holy lake at 3,895m (with the pass climbing up to 4,725m). Legend says the lake was made by the Pandavas, and local people float traditional hats in it to predict their fortune.',
     coordinates: { lat: 31.55, lon: 77.99 },

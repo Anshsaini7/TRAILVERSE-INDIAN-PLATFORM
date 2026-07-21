@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'images.hive.blog',
+      },
+      {
+        protocol: 'https',
         hostname: '*.amazonaws.com',
       },
     ],
