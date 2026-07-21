@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Trek, trekkingCompanies } from '../data/mockData';
-import { Star, MapPin, Calendar, Clock, ArrowUpRight, Thermometer } from 'lucide-react';
+import { Star, MapPin, Calendar, Clock, ArrowUpRight, Thermometer, Mountain } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface TrekCardProps {
@@ -91,7 +91,7 @@ export default function TrekCard({ trek }: TrekCardProps) {
         {/* Quick Parameters */}
         <div className="grid grid-cols-2 gap-y-3 gap-x-2 my-4 text-xs font-medium text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-1.5">
-            <Calendar className="h-4 w-4 text-slate-400" />
+            <Mountain className="h-4 w-4 text-slate-400" />
             <span>Alt: <strong className="text-slate-800 dark:text-slate-200">{trek.altitude}m</strong></span>
           </div>
           <div className="flex items-center gap-1.5">
