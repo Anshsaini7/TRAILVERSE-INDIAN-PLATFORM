@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { treks, Trek } from '../../data/mockData';
 import { Plane, Train as TrainIcon, Bus, Car, ArrowRight, MapPin, DollarSign, Clock, HelpCircle, Compass, Sparkles, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useWeather } from '../../context/WeatherContext';
 
 // Starting cities list
 const STARTING_CITIES = [
@@ -36,9 +37,24 @@ interface TravelOption {
 }
 
 export default function RoutePlanner() {
+  const { userLocation } = useWeather();
   const [startCity, setStartCity] = useState('Delhi');
   const [selectedTrekId, setSelectedTrekId] = useState(treks[0]?.id || '');
   const [activeTab, setActiveTab] = useState<'Flight' | 'Train' | 'Bus' | 'Taxi'>('Flight');
+
+  const citiesList = useMemo(() => {
+    const list = [...STARTING_CITIES];
+    if (userLocation && userLocation.city && !list.includes(userLocation.city)) {
+      list.unshift(userLocation.city);
+    }
+    return list;
+  }, [userLocation]);
+
+  useEffect(() => {
+    if (userLocation && userLocation.city) {
+      setStartCity(userLocation.city);
+    }
+  }, [userLocation]);
 
   const selectedTrek = useMemo(() => {
     return treks.find(t => t.id === selectedTrekId) || treks[0];
@@ -369,8 +385,8 @@ export default function RoutePlanner() {
                   onChange={(e) => setStartCity(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer font-semibold text-slate-850 dark:text-slate-200"
                 >
-                  {STARTING_CITIES.map(c => (
-                    <option key={c} value={c}>{c}</option>
+                  {citiesList.map(c => (
+                    <option key={c} value={c}>{c === userLocation?.city ? `📍 ${c} (Current Location)` : c}</option>
                   ))}
                 </select>
               </div>

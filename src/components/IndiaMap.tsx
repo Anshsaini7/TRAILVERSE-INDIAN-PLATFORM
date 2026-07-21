@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { STATE_DISTRICTS } from '../data/indianLocations';
+import { useWeather } from '../context/WeatherContext';
 
 function getHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Earth radius in km
@@ -265,6 +266,7 @@ function generateWindingRoute(
 }
 
 export default function IndiaMap() {
+  const { userLocation } = useWeather();
   const [activeTab, setActiveTab] = useState<'treks' | 'camps' | 'operators' | 'sports'>('treks');
   const [selectedItem, setSelectedItem] = useState<any>(treks[0]); // Default selected item
   const [selectedState, setSelectedState] = useState<string>('Delhi');
@@ -279,6 +281,19 @@ export default function IndiaMap() {
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lon: number; name: string } | null>(null);
   const [isDetectingLocation, setIsDetectingLocation] = useState(false);
   const [mapType, setMapType] = useState<'hybrid' | 'roadmap' | 'terrain'>('hybrid');
+
+  // Auto-detect and use current location if available from context on initial load
+  useEffect(() => {
+    if (userLocation && userLocation.city && userLocation.state && !userClicked) {
+      setSelectedState('Detected Location');
+      setSelectedCityName(userLocation.city);
+      setCurrentLocation({
+        name: userLocation.city,
+        lat: userLocation.lat,
+        lon: userLocation.lon
+      });
+    }
+  }, [userLocation, userClicked]);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
