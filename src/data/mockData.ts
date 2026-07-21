@@ -217,11 +217,10 @@ export const treks: Trek[] = [
     baseCampDetails: 'Lohajung is located in Chamoli district. It is a scenic village with tea houses, hotels, and mobile connectivity (BNSL/Jio). Accessible via Dehradun/Kathgodam.',
     rating: 4.8,
     startingPrice: 9500,
-    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1589553460730-0eb5be396a55?auto=format&fit=crop&w=1200&q=80',
     images: [
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1589553460730-0eb5be396a55?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ', // Mock placeholder
     overview: 'Roopkund is a mystery lake nestled high in the Garhwal Himalayas. The trek takes you through majestic oak forests, vast alpine meadows (Ali & Bedni Bugyal), and snow-covered glaciers, culminating at a glacial lake containing human skeletons dating back to the 9th century.',
@@ -297,10 +296,10 @@ export const treks: Trek[] = [
     baseCampDetails: 'Sankri is a charming village inside Govind Wildlife Sanctuary. It has plenty of hotels, home stays, and mobile networks (Jio/Airtel). Start point for multiple treks.',
     rating: 4.9,
     startingPrice: 6000,
-    image: 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1618331835717-8016f122c1db?auto=format&fit=crop&w=1200&q=80',
     images: [
       'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=80',
-      'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1618331835717-8016f122c1db?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     overview: 'Kedarkantha is arguably India\'s most famous winter trek. Famous for its pine forests blanketed in deep snow, beautiful camp sites, and an incredibly rewarding summit climb that offers a 360-degree panorama of the Garhwal Himalayas (including Swargarohini, Bandarpoonch, and Black Peak).',
@@ -371,9 +370,9 @@ export const treks: Trek[] = [
     baseCampDetails: 'Jobra is located 1 hour drive from Manali. Surrounded by lush pine trees and flowing rivers. No cellular connectivity beyond Jobra.',
     rating: 4.7,
     startingPrice: 7500,
-    image: 'https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1596761372166-5b4c42d7ed1f?auto=format&fit=crop&w=1200&q=80',
     images: [
-      'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1596761372166-5b4c42d7ed1f?auto=format&fit=crop&w=800&q=80',
       'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
@@ -444,9 +443,9 @@ export const treks: Trek[] = [
     baseCampDetails: 'Leh city. Hoteliers, medical supply stores, oxygen bars, and flight access are located here. 3 days of mandatory acclimatization in Leh is legally required.',
     rating: 4.8,
     startingPrice: 22000,
-    image: 'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1618083707368-b3823daa2726?auto=format&fit=crop&w=1200&q=80',
     images: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1618083707368-b3823daa2726?auto=format&fit=crop&w=800&q=80'
     ],
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
     overview: 'Chadar Trek is a legendary sub-zero expedition walking on the frozen Zanskar River. Trekkers slide across sheets of glassy blue ice, camp inside caves along the canyon walls, and experience the ancient winter transport route of the Zanskari people in temperatures dropping to -30°C. Highlights include the magnificent semi-frozen Nerak Waterfall.',
@@ -2588,9 +2587,9 @@ export const treks: Trek[] = [
     baseCampDetails: 'Govindghat is a bustling town near Joshimath on the banks of Alaknanda river, featuring hotels and gurudwaras.',
     rating: 4.8,
     startingPrice: 9500,
-    image: 'https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1200&q=80',
     images: [
-      'https://images.unsplash.com/photo-1527004013197-933c4bb611b3?auto=format&fit=crop&w=800&q=80'
+      'https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=800&q=80'
     ],
     overview: 'Valley of Flowers is a UNESCO World Heritage Site nestled in the Chamoli district. The valley comes alive during the monsoon with over 500 species of alpine flowers. The trek also climbs to the holy lake of Hemkund Sahib, a sacred Sikh shrine located at 4,329m.',
     coordinates: { lat: 30.72, lon: 79.60 },
