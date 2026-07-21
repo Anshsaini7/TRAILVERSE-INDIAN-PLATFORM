@@ -117,7 +117,7 @@ export default function Navbar() {
       
       setClockVal({
         date: `${day}-${month}-${year}`,
-        time: `(${hStr}:${mStr}:${sStr})${ampm}`
+        time: `${hStr}:${mStr}:${sStr} ${ampm}`
       });
     };
 
@@ -396,66 +396,66 @@ export default function Navbar() {
           left: '20px',
           zIndex: 9999,
           background: theme === 'dark'
-            ? 'linear-gradient(135deg,rgba(15,23,42,0.92) 0%,rgba(30,41,59,0.95) 100%)'
-            : 'linear-gradient(135deg,rgba(255,255,255,0.92) 0%,rgba(241,245,249,0.95) 100%)',
-          border: theme === 'dark' ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(16,185,129,0.30)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 0 0 1px rgba(16,185,129,0.08)',
-          backdropFilter: 'blur(16px)',
-          borderRadius: '16px',
-          padding: '10px 14px',
-          minWidth: '140px',
-          userSelect: 'none'
+            ? 'rgba(15, 23, 42, 0.85)'
+            : 'rgba(255, 255, 255, 0.85)',
+          border: theme === 'dark' ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(16,185,129,0.25)',
+          boxShadow: '0 8px 32px 0 rgba(31,38,135,0.08), 0 1px 2px 0 rgba(0,0,0,0.05)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: '9999px',
+          padding: '6px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          userSelect: 'none',
+          transition: 'all 0.3s ease'
         }}
+        className="hover:scale-[1.02] shadow-lg"
       >
-        {/* Weather row */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span style={{ fontSize: '28px', lineHeight: 1 }}>
+        {/* Weather section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span style={{ fontSize: '20px', lineHeight: 1 }}>
             {navWeather ? navWeather.icon : '🌡️'}
           </span>
-          <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1, gap: '2px' }}>
-            <span style={{
-              fontSize: '20px',
-              fontWeight: 900,
-              color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
-              letterSpacing: '-0.5px'
-            }}>
-              {navWeather ? `${navWeather.temp}°C` : '—°C'}
-            </span>
-            <span style={{
-              fontSize: '9px',
-              fontWeight: 600,
-              color: '#10b981',
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase'
-            }}>
-              Live Weather
-            </span>
-          </div>
+          <span style={{
+            fontSize: '14px',
+            fontWeight: 800,
+            color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
+            letterSpacing: '-0.2px'
+          }}>
+            {navWeather ? `${navWeather.temp}°C` : '—°C'}
+          </span>
         </div>
+
         {/* Divider */}
-        <div style={{ height: '1px', background: theme === 'dark' ? 'rgba(100,116,139,0.3)' : 'rgba(148,163,184,0.4)', margin: '0 0 6px 0' }} />
+        <div style={{ width: '1px', height: '14px', background: theme === 'dark' ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.5)' }} />
+
         {/* Date */}
         <div style={{
           fontFamily: 'sans-serif',
-          fontSize: '15px',
-          fontWeight: 800,
-          color: theme === 'dark' ? '#f1f5f9' : '#0f172a',
-          letterSpacing: '0.05em',
-          marginBottom: '4px'
+          fontSize: '12px',
+          fontWeight: 700,
+          color: theme === 'dark' ? '#94a3b8' : '#64748b',
+          letterSpacing: '0.02em',
+          whiteSpace: 'nowrap'
         }}>
           {mounted ? (clockVal.date || '11-06-2026') : '11-06-2026'}
         </div>
-        {/* Time (hh:mm:ss)AM/PM */}
+
+        {/* Divider */}
+        <div style={{ width: '1px', height: '14px', background: theme === 'dark' ? 'rgba(100,116,139,0.4)' : 'rgba(148,163,184,0.5)' }} />
+
+        {/* Time */}
         <div style={{
           fontFamily: 'monospace',
-          fontSize: '15px',
-          fontWeight: 900,
-          letterSpacing: '0.05em',
+          fontSize: '13px',
+          fontWeight: 800,
+          letterSpacing: '0.04em',
           background: 'linear-gradient(90deg,#10b981,#3b82f6)',
           WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
+          WebkitTextFillColor: 'transparent',
+          whiteSpace: 'nowrap'
         }}>
-          {mounted ? (clockVal.time || '(04:12:00)PM') : '(04:12:00)PM'}
+          {mounted ? (clockVal.time || '04:12:00 PM') : '04:12:00 PM'}
         </div>
       </div>
     </header>
