@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/AuthContext';
-import { Lock, Mail, ShieldAlert, Check, HelpCircle } from 'lucide-react';
+import { Lock, Mail, ShieldAlert, Check, HelpCircle, Eye, EyeOff } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function AdminLoginPage() {
@@ -15,6 +15,7 @@ export default function AdminLoginPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // If already logged in as Admin, auto-redirect to admin panel
   useEffect(() => {
@@ -116,14 +117,21 @@ export default function AdminLoginPage() {
             <div className="relative">
               <Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-slate-550" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••••••••••"
                 disabled={loading}
-                className="w-full bg-slate-950/70 border border-slate-850 rounded-2xl pl-10.5 pr-4 py-3.5 text-white placeholder-slate-650 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/50 transition-all font-semibold"
+                className="w-full bg-slate-950/70 border border-slate-850 rounded-2xl pl-10.5 pr-10 py-3.5 text-white placeholder-slate-650 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/50 transition-all font-semibold"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3.5 text-slate-405 hover:text-white cursor-pointer"
+              >
+                {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+              </button>
             </div>
           </div>
 

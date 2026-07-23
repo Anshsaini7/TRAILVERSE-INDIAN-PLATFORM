@@ -5,7 +5,7 @@ import { useAuth, UserRole } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Mail, User, Phone, MapPin, Sparkles, Check, HelpCircle, Star, Compass, ArrowRight } from 'lucide-react';
+import { Lock, Mail, User, Phone, MapPin, Sparkles, Check, HelpCircle, Star, Compass, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function AuthPage() {
@@ -22,6 +22,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [otpCode, setOtpCode] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Action feedback states
   const [errorMsg, setErrorMsg] = useState('');
@@ -214,13 +215,20 @@ export default function AuthPage() {
                     <div className="relative">
                       <Lock className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                       <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         required
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                        className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-10 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-650 dark:hover:text-slate-300 cursor-pointer"
+                      >
+                        {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                      </button>
                     </div>
                   </div>
 
@@ -325,13 +333,20 @@ export default function AuthPage() {
                     <div className="relative">
                       <Lock className="absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
                       <input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         required
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         placeholder="Minimum 8 characters"
-                        className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
+                        className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-10 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-3 text-slate-400 hover:text-slate-650 dark:hover:text-slate-300 cursor-pointer"
+                      >
+                        {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                      </button>
                     </div>
                   </div>
 
