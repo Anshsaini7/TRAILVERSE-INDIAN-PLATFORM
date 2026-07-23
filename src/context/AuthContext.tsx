@@ -138,7 +138,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn('⚠️ Backend unreachable or error, falling back to Local Mock Database.', err);
       
       // 2. Local fallback
-      const mockUser = MOCK_USERS[email];
+      let registeredUser = null;
+      try {
+        const storedUsers = localStorage.getItem('tv_registered_users');
+        if (storedUsers) {
+          const registeredUsers = JSON.parse(storedUsers);
+          registeredUser = registeredUsers[email];
+        }
+      } catch (e) {
+        console.error('Failed to parse registered users:', e);
+      }
+
+      const mockUser = registeredUser || MOCK_USERS[email];
       if (mockUser && mockUser.password === password) {
         const { password: _, ...profile } = mockUser;
         
@@ -190,7 +201,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         achievement_badges: []
       };
 
-      MOCK_USERS[email] = { ...newMockProfile, password };
+      try {
+        const storedUsers = localStorage.getItem('tv_registered_users');
+        const registeredUsers = storedUsers ? JSON.parse(storedUsers) : {};
+        registeredUsers[email] = { ...newMockProfile, password };
+        localStorage.setItem('tv_registered_users', JSON.stringify(registeredUsers));
+      } catch (e) {
+        console.error('Failed to save registered user:', e);
+      }
+
       setUser(newMockProfile);
       setToken('mock_jwt_token_key');
       localStorage.setItem('tv_user', JSON.stringify(newMockProfile));
