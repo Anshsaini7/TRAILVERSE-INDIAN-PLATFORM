@@ -42,11 +42,7 @@ export default function AdminDashboard() {
   }
 
   // User Accounts State
-  const [usersList, setUsersList] = useState([
-    { id: 'u-1', name: 'Abhinav Sharma', email: 'abhinav@gmail.com', role: 'USER', username: 'abhinav_conquers', suspended: false, joined: '2026-01-10' },
-    { id: 'u-2', name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', role: 'USER', username: 'rahul_trek', suspended: false, joined: '2026-03-15' },
-    { id: 'u-3', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', role: 'GUIDE', username: 'bikat_guide', suspended: false, joined: '2026-04-20' }
-  ]);
+  const [usersList, setUsersList] = useState<any[]>([]);
   const [userSearchTerm, setUserSearchTerm] = useState('');
 
   // Load custom users and support tickets from localStorage on client-side mount
@@ -462,46 +458,54 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-850/80 font-bold text-slate-750 dark:text-slate-300">
-                  {filteredUsers.map(usr => (
-                    <tr key={usr.id}>
-                      <td className="py-4 px-6">
-                        <strong className="text-slate-900 dark:text-white">{usr.name}</strong>
-                        <span className="text-[9px] text-slate-400 block font-bold mt-0.5">Joined: {usr.joined}</span>
-                      </td>
-                      <td className="py-4 px-4 font-semibold">@{usr.username}</td>
-                      <td className="py-4 px-4 font-semibold">{usr.email}</td>
-                      <td className="py-4 px-4">
-                        <span className={`px-2.5 py-0.5 rounded text-[9px] font-bold ${usr.role === 'ADMIN' ? 'bg-purple-500/10 text-purple-500' : usr.role === 'GUIDE' ? 'bg-cyan-500/10 text-cyan-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
-                          {usr.role}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4 text-center">
-                        {usr.suspended ? (
-                          <span className="text-[9px] bg-red-500/15 text-red-500 px-2 py-0.5 rounded border border-red-500/15">Yes</span>
-                        ) : (
-                          <span className="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-400 px-2 py-0.5 rounded">No</span>
-                        )}
-                      </td>
-                      <td className="py-4 px-6 text-center">
-                        <div className="flex items-center justify-center gap-3">
-                          <button
-                            onClick={() => handleToggleSuspendUser(usr.id)}
-                            className={`p-1.5 rounded-lg hover:bg-slate-105 transition-colors cursor-pointer ${usr.suspended ? 'text-emerald-500' : 'text-amber-500'}`}
-                            title={usr.suspended ? 'Unsuspend account' : 'Suspend account'}
-                          >
-                            {usr.suspended ? <Unlock className="h-4.5 w-4.5" /> : <Lock className="h-4.5 w-4.5" />}
-                          </button>
-                          <button
-                            onClick={() => handleDeleteUser(usr.id)}
-                            className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-105 transition-colors cursor-pointer"
-                            title="Delete User"
-                          >
-                            <Trash2 className="h-4.5 w-4.5" />
-                          </button>
-                        </div>
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.map(usr => (
+                      <tr key={usr.id}>
+                        <td className="py-4 px-6">
+                          <strong className="text-slate-900 dark:text-white">{usr.name}</strong>
+                          <span className="text-[9px] text-slate-400 block font-bold mt-0.5">Joined: {usr.joined}</span>
+                        </td>
+                        <td className="py-4 px-4 font-semibold">@{usr.username}</td>
+                        <td className="py-4 px-4 font-semibold">{usr.email}</td>
+                        <td className="py-4 px-4">
+                          <span className={`px-2.5 py-0.5 rounded text-[9px] font-bold ${usr.role === 'ADMIN' ? 'bg-purple-500/10 text-purple-500' : usr.role === 'GUIDE' ? 'bg-cyan-500/10 text-cyan-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                            {usr.role}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 text-center">
+                          {usr.suspended ? (
+                            <span className="text-[9px] bg-red-500/15 text-red-500 px-2 py-0.5 rounded border border-red-500/15">Yes</span>
+                          ) : (
+                            <span className="text-[9px] bg-slate-100 dark:bg-slate-850 text-slate-400 px-2 py-0.5 rounded">No</span>
+                          )}
+                        </td>
+                        <td className="py-4 px-6 text-center">
+                          <div className="flex items-center justify-center gap-3">
+                            <button
+                              onClick={() => handleToggleSuspendUser(usr.id)}
+                              className={`p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer ${usr.suspended ? 'text-emerald-500' : 'text-amber-500'}`}
+                              title={usr.suspended ? 'Unsuspend account' : 'Suspend account'}
+                            >
+                              {usr.suspended ? <Unlock className="h-4.5 w-4.5" /> : <Lock className="h-4.5 w-4.5" />}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteUser(usr.id)}
+                              className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                              title="Delete User"
+                            >
+                              <Trash2 className="h-4.5 w-4.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="py-10 text-center text-slate-405 font-bold uppercase tracking-wider">
+                        No registered users found
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
