@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Plus, Check, X, ShieldAlert, Award, FileText, ChevronRight, 
-  Star, DollarSign, Calendar, Users, Eye, ShieldCheck, HelpCircle 
+  Star, IndianRupee, Calendar, Users, Eye, ShieldCheck, HelpCircle 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -244,8 +244,8 @@ export default function OperatorDashboardPage() {
                           Dates: <strong className="text-slate-850 dark:text-slate-200">{pkg.dates}</strong>
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <DollarSign className="h-4 w-4 text-emerald-500" />
-                          Price: <strong className="text-emerald-500">₹{pkg.price.toLocaleString()}</strong>
+                          <IndianRupee className="h-4 w-4 text-emerald-500" />
+                          Price: <strong className="text-emerald-500">{pkg.price.toLocaleString()}</strong>
                         </span>
                       </div>
                       

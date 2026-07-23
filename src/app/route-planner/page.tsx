@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { treks, Trek } from '../../data/mockData';
-import { Plane, Train as TrainIcon, Bus, Car, ArrowRight, MapPin, DollarSign, Clock, HelpCircle, Compass, Sparkles, Navigation } from 'lucide-react';
+import { Plane, Train as TrainIcon, Bus, Car, ArrowRight, MapPin, IndianRupee, Clock, HelpCircle, Compass, Sparkles, Navigation } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWeather } from '../../context/WeatherContext';
 
@@ -547,8 +547,8 @@ export default function RoutePlanner() {
                                 {seg.duration}
                               </span>
                               <span className="flex items-center gap-1">
-                                <DollarSign className="h-3 w-3" />
-                                Est. ₹{seg.cost.toLocaleString()}
+                                <IndianRupee className="h-3 w-3" />
+                                Est. {seg.cost.toLocaleString()}
                               </span>
                             </div>
                           </div>
