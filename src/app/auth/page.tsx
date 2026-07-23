@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth, UserRole } from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Mail, User, Phone, MapPin, Sparkles, Check, HelpCircle, Star, Compass, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -233,10 +234,18 @@ export default function AuthPage() {
                   </button>
                 </form>
 
-                {/* Switch tab option */}
-                <div className="mt-6 text-center text-xs font-bold text-slate-500">
-                  New to TrailVerse?{' '}
-                  <button onClick={() => setMode('signup')} className="text-emerald-500 hover:underline">Create an Account</button>
+                 {/* Switch tab option */}
+                <div className="mt-6 text-center text-xs font-bold text-slate-500 flex flex-col gap-3">
+                  <div>
+                    New to TrailVerse?{' '}
+                    <button onClick={() => setMode('signup')} className="text-emerald-500 hover:underline cursor-pointer">Create an Account</button>
+                  </div>
+                  <div className="pt-3 border-t border-slate-100 dark:border-slate-850">
+                    <Link href="/admin/login" className="inline-flex items-center gap-1.5 text-[10px] text-slate-400 hover:text-emerald-500 font-extrabold uppercase tracking-wider transition-colors cursor-pointer">
+                      <Lock className="h-3 w-3" />
+                      Secure Admin Portal Login
+                    </Link>
+                  </div>
                 </div>
 
                 <div className="relative my-6">
