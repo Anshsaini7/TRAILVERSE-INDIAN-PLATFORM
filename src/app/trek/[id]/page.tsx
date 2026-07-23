@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { useTrekWeather } from '../../../hooks/useTrekWeather';
 import { useWeather } from '../../../context/WeatherContext';
+import { useAuth } from '../../../context/AuthContext';
 import CurrentWeatherCard from '../../../components/weather/CurrentWeatherCard';
 import ForecastStrip from '../../../components/weather/ForecastStrip';
 import TempTrendChart from '../../../components/weather/TempTrendChart';
@@ -30,6 +31,7 @@ interface TrekDetailsProps {
 export default function TrekDetailsPage({ params }: TrekDetailsProps) {
   const router = useRouter();
   const { id } = use(params);
+  const { user } = useAuth();
   
   // Locate Trek and Operator
   const trek = treks.find(t => t.id === id);
@@ -206,7 +208,27 @@ export default function TrekDetailsPage({ params }: TrekDetailsProps) {
   // Handle Booking Trigger
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!bookingDate) return;
+    if (!bookingDate || !trek) return;
+
+    try {
+      const stored = localStorage.getItem('tv_bookings');
+      const allBookings = stored ? JSON.parse(stored) : [];
+      const newBooking = {
+        id: 'b-' + Math.floor(Math.random() * 10000),
+        trekId: trek.id,
+        trekName: trek.name,
+        departureDate: bookingDate,
+        persons: bookingPersons,
+        price: (trek.startingPrice || 10000) * bookingPersons,
+        status: 'Confirmed',
+        userEmail: user?.email || 'guest@gmail.com',
+        bookingDate: new Date().toISOString()
+      };
+      allBookings.push(newBooking);
+      localStorage.setItem('tv_bookings', JSON.stringify(allBookings));
+    } catch (err) {
+      console.error('Failed to save booking:', err);
+    }
 
     setBookingSuccess(true);
     // Trigger canvas confetti on successful booking simulation!

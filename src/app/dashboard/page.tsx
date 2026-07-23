@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { treks, trekkingCompanies, Trek } from '../../data/mockData';
 import TrekCard from '../../components/TrekCard';
@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import DashboardWeatherWidget from '../../components/weather/DashboardWeatherWidget';
 import { useWeather } from '../../context/WeatherContext';
+import { useAuth } from '../../context/AuthContext';
 
 interface DashboardCertificate {
   id: string;
@@ -59,54 +60,106 @@ export default function UserDashboard() {
   const highestAlt = sessions.reduce((max, sess) => Math.max(max, sess.maxAltitude ?? 0), 0);
   const statesExplored = new Set(sessions.map(s => s.state).filter((st): st is string => !!st && st !== 'Unknown')).size;
 
-  // Mock user dashboard profile stats
+  const { user } = useAuth();
+  
+  // Load bookings from localStorage linked to logged-in user
+  const [bookings, setBookings] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const email = user?.email || 'abhinav@gmail.com';
+      const stored = localStorage.getItem('tv_bookings');
+      let userBookings = [];
+      if (stored) {
+        const allBookings = JSON.parse(stored);
+        userBookings = allBookings.filter((b: any) => b.userEmail === email);
+      }
+      
+      // If it is the default user and no bookings exist yet, seed a default booking
+      if (userBookings.length === 0 && email === 'abhinav@gmail.com') {
+        userBookings = [
+          {
+            id: 'b-991',
+            trekId: 'hampta-pass',
+            trekName: 'Hampta Pass',
+            trek: treks[2], // Hampta Pass
+            departureDate: '2026-07-15',
+            persons: 2,
+            price: 19800,
+            status: 'Confirmed',
+            company: trekkingCompanies[2], // Bikat Adventures
+            userEmail: 'abhinav@gmail.com'
+          }
+        ];
+      } else {
+        // Resolve trek objects for any dynamic user bookings
+        userBookings = userBookings.map((b: any) => ({
+          ...b,
+          trek: treks.find(t => t.id === b.trekId) || treks[0],
+          company: trekkingCompanies.find(c => c.id === (treks.find(t => t.id === b.trekId)?.companyId || 'bikat'))
+        }));
+      }
+      setBookings(userBookings);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [user]);
+
   const userProfile = {
-    name: 'Abhinav Sharma',
-    avatar: '🏕️',
-    badge: 'Peak Conqueror',
-    altitudeGained: 8839, // Roopkund + Kedarkantha
-    points: 3400,
-    completedCount: 2,
-    bookingsCount: 1,
-    savedCount: 2
+    name: user?.name || 'Abhinav Sharma',
+    avatar: user?.role === 'ADMIN' ? '👑' : user?.role === 'GUIDE' ? '🏕️' : '🥾',
+    badge: user?.role === 'ADMIN' ? 'Site Administrator' : user?.role === 'GUIDE' ? 'Certified Guide' : 'Peak Conqueror',
+    altitudeGained: user?.email === 'abhinav@gmail.com' || !user ? 8839 : highestAlt || 0,
+    points: user?.email === 'abhinav@gmail.com' || !user ? 3400 : Math.round(totalKm * 100),
+    completedCount: user?.email === 'abhinav@gmail.com' || !user ? 2 : sessions.length,
+    bookingsCount: bookings.length,
+    savedCount: user?.email === 'abhinav@gmail.com' || !user ? 2 : (user?.saved_treks?.length || 0)
   };
 
-  // Mock active bookings
-  const bookings = [
-    {
-      id: 'b-991',
-      trekId: 'hampta-pass',
-      trek: treks[2], // Hampta Pass
-      departureDate: '2026-07-15',
-      persons: 2,
-      price: 19800,
-      status: 'Confirmed',
-      company: trekkingCompanies[2] // Bikat Adventures
+  // Dynamic completed adventures (certificates)
+  const completions = useMemo(() => {
+    const email = user?.email || 'abhinav@gmail.com';
+    if (email === 'abhinav@gmail.com') {
+      return [
+        {
+          id: 'cert-101',
+          trekId: 'roopkund',
+          trek: treks[0], // Roopkund
+          completionDate: '2025-10-10',
+          maxAltitude: 5029,
+          leader: 'Swathi Chatrapathy'
+        },
+        {
+          id: 'cert-102',
+          trekId: 'kedarkantha',
+          trek: treks[1], // Kedarkantha
+          completionDate: '2026-01-20',
+          maxAltitude: 3810,
+          leader: 'Arjun Majumdar'
+        }
+      ];
     }
-  ];
+    return sessions.map((s) => ({
+      id: `cert-${s.id}`,
+      trekId: s.trekId,
+      trek: treks.find(t => t.id === s.trekId) || treks[0],
+      completionDate: new Date(s.endTime).toLocaleDateString(),
+      maxAltitude: s.maxAltitude || 3000,
+      leader: 'Self Guided / Tracker Verified'
+    }));
+  }, [user, sessions]);
 
-  // Mock completed adventures (certificates)
-  const completions = [
-    {
-      id: 'cert-101',
-      trekId: 'roopkund',
-      trek: treks[0], // Roopkund
-      completionDate: '2025-10-10',
-      maxAltitude: 5029,
-      leader: 'Swathi Chatrapathy'
-    },
-    {
-      id: 'cert-102',
-      trekId: 'kedarkantha',
-      trek: treks[1], // Kedarkantha
-      completionDate: '2026-01-20',
-      maxAltitude: 3810,
-      leader: 'Arjun Majumdar'
+  // Dynamic wishlist (saved treks)
+  const wishlist = useMemo(() => {
+    const email = user?.email || 'abhinav@gmail.com';
+    if (email === 'abhinav@gmail.com') {
+      return [treks[3], treks[4]]; // Chadar, Goechala
     }
-  ];
-
-  // Mock wishlist (saved treks)
-  const wishlist = [treks[3], treks[4]]; // Chadar, Goechala
+    if (user?.saved_treks) {
+      return treks.filter(t => user.saved_treks?.includes(t.id));
+    }
+    return [];
+  }, [user]);
 
   // Handle Certificate Click
   const handleCertClick = (cert: DashboardCertificate) => {
@@ -299,11 +352,11 @@ export default function UserDashboard() {
                     <div className="flex gap-4">
                       {/* Image Thumbnail */}
                       <div className="relative h-20 w-32 rounded-2xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800">
-                        <img src={booking.trek.image} alt={booking.trek.name} className="object-cover h-full w-full" />
+                        <img src={booking.trek ? booking.trek.image : ''} alt={booking.trek ? booking.trek.name : 'Trek'} className="object-cover h-full w-full" />
                       </div>
                       <div>
                         <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-wider block">Trip Ticket</span>
-                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">{booking.trek.name}</h3>
+                        <h3 className="text-base font-extrabold text-slate-900 dark:text-white mt-0.5">{booking.trek ? booking.trek.name : booking.trekName}</h3>
                         
                         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-xs text-slate-500 font-bold">
                           <span className="flex items-center gap-1">
@@ -312,7 +365,7 @@ export default function UserDashboard() {
                           </span>
                           <span className="flex items-center gap-1">
                             <MapPin className="h-4 w-4" />
-                            Operator: {booking.company.name}
+                            Operator: {booking.company ? booking.company.name : 'Verified Operator'}
                           </span>
                         </div>
                       </div>
