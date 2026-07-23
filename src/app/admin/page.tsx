@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { treks as initialTreks, Trek } from '../../data/mockData';
 import { 
   ShieldCheck, Plus, Trash2, Search, Building2, User, Activity, 
@@ -14,8 +14,70 @@ export default function AdminDashboard() {
   const [treks, setTreks] = useState<Trek[]>(initialTreks);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Tab states: 'treks' | 'users' | 'documents' | 'reviews' | 'analytics'
-  const [activeTab, setActiveTab] = useState<'treks' | 'users' | 'documents' | 'reviews' | 'analytics'>('treks');
+  // Tab states: 'treks' | 'users' | 'documents' | 'reviews' | 'analytics' | 'inquiries'
+  const [activeTab, setActiveTab] = useState<'treks' | 'users' | 'documents' | 'reviews' | 'analytics' | 'inquiries'>('treks');
+  const [supportTickets, setSupportTickets] = useState<any[]>([]);
+
+  // User Accounts State
+  const [usersList, setUsersList] = useState([
+    { id: 'u-1', name: 'Abhinav Sharma', email: 'abhinav@gmail.com', role: 'USER', username: 'abhinav_conquers', suspended: false, joined: '2026-01-10' },
+    { id: 'u-2', name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', role: 'USER', username: 'rahul_trek', suspended: false, joined: '2026-03-15' },
+    { id: 'u-3', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', role: 'GUIDE', username: 'bikat_guide', suspended: false, joined: '2026-04-20' },
+    { id: 'u-4', name: 'Spam Bot', email: 'spammer99@spam.com', role: 'USER', username: 'spammer_99', suspended: true, joined: '2026-06-01' }
+  ]);
+  const [userSearchTerm, setUserSearchTerm] = useState('');
+
+  // Load custom users and support tickets from localStorage on client-side mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Load registered users
+    try {
+      const storedUsers = localStorage.getItem('tv_registered_users');
+      if (storedUsers) {
+        const registeredUsers = JSON.parse(storedUsers);
+        const customUsers = Object.keys(registeredUsers).map((email, idx) => {
+          const u = registeredUsers[email];
+          return {
+            id: u.id || `u-custom-${idx}`,
+            name: u.name,
+            email: u.email,
+            role: u.role || 'USER',
+            username: u.username || email.split('@')[0],
+            suspended: false,
+            joined: new Date().toLocaleDateString()
+          };
+        });
+        
+        // Merge without duplicates
+        setUsersList(prev => {
+          const existingEmails = prev.map(u => u.email);
+          const filteredCustom = customUsers.filter(u => !existingEmails.includes(u.email));
+          return [...prev, ...filteredCustom];
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    // Load support tickets
+    try {
+      const storedTickets = localStorage.getItem('tv_support_tickets');
+      if (storedTickets) {
+        setSupportTickets(JSON.parse(storedTickets));
+      } else {
+        // Seed default tickets if empty
+        const defaultTickets = [
+          { id: 'tkt-9012', name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', subject: 'Booking Help', message: 'I want to book Hampta Pass but my payment page is reloading. Can you guide me?', date: '2026-07-21', status: 'OPEN' },
+          { id: 'tkt-9013', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', subject: 'Operator Partnership', message: 'Hello Admin, we uploaded our new Roopkund winter package, please verify our documents.', date: '2026-07-22', status: 'OPEN' }
+        ];
+        localStorage.setItem('tv_support_tickets', JSON.stringify(defaultTickets));
+        setSupportTickets(defaultTickets);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   // Modal forms states
   const [showAddModal, setShowAddModal] = useState(false);
@@ -37,15 +99,6 @@ export default function AdminDashboard() {
     { id: 'bikat-adventures', name: 'Bikat Adventures', verified: true, rating: 4.8, bookings: 310, contact: '+91 7654321098' },
     { id: 'himalayan-cabs', name: 'Himalayan Local Operators', verified: false, rating: 4.2, bookings: 45, contact: '+91 6543210987' }
   ]);
-
-  // User Accounts State
-  const [usersList, setUsersList] = useState([
-    { id: 'u-1', name: 'Abhinav Sharma', email: 'abhinav@gmail.com', role: 'USER', username: 'abhinav_conquers', suspended: false, joined: '2026-01-10' },
-    { id: 'u-2', name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', role: 'USER', username: 'rahul_trek', suspended: false, joined: '2026-03-15' },
-    { id: 'u-3', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', role: 'GUIDE', username: 'bikat_guide', suspended: false, joined: '2026-04-20' },
-    { id: 'u-4', name: 'Spam Bot', email: 'spammer99@spam.com', role: 'USER', username: 'spammer_99', suspended: true, joined: '2026-06-01' }
-  ]);
-  const [userSearchTerm, setUserSearchTerm] = useState('');
 
   // Verification documents State
   const [docQueue, setDocQueue] = useState([
@@ -245,9 +298,9 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: 'Treks in Database', val: stats.totalTreks, desc: 'Active routes', icon: Compass, color: 'text-emerald-500 bg-emerald-500/10' },
-          { label: 'Verified Agencies', val: stats.verifiedOps, desc: 'Safety certified operators', icon: Building2, color: 'text-cyan-500 bg-cyan-500/10' },
-          { label: 'Avg Package Pricing', val: `₹${stats.avgPrice.toLocaleString()}`, desc: 'Operator base price', icon: Activity, color: 'text-purple-500 bg-purple-500/10' },
-          { label: 'Avg Trek Duration', val: `${stats.avgDuration} Days`, desc: 'Average trail days', icon: BarChart2, color: 'text-amber-500 bg-amber-500/10' }
+          { label: 'Active User Accounts', val: usersList.length, desc: 'Registered hikers', icon: User, color: 'text-purple-500 bg-purple-500/10' },
+          { label: 'Open Inquiries', val: supportTickets.filter(t => t.status === 'OPEN').length, desc: 'Support tickets', icon: ShieldAlert, color: 'text-amber-500 bg-amber-500/10' },
+          { label: 'Verified Agencies', val: stats.verifiedOps, desc: 'Safety certified', icon: Building2, color: 'text-cyan-500 bg-cyan-500/10' }
         ].map((item, i) => {
           const Icon = item.icon;
           return (
@@ -257,7 +310,7 @@ export default function AdminDashboard() {
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-bold block uppercase">{item.label}</span>
-                <strong className="text-xl font-black text-slate-950 dark:text-white mt-0.5 block">{item.val}</strong>
+                <strong className="text-xl font-black text-slate-955 dark:text-white mt-0.5 block">{item.val}</strong>
                 <span className="text-[9px] text-slate-400 font-medium block mt-0.5">{item.desc}</span>
               </div>
             </div>
@@ -266,10 +319,11 @@ export default function AdminDashboard() {
       </div>
 
       {/* Tabs list */}
-      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-6 text-xs font-bold">
+      <div className="flex border-b border-slate-200 dark:border-slate-800 gap-6 text-xs font-bold overflow-x-auto whitespace-nowrap scrollbar-none pb-0.5">
         {[
           { key: 'treks', label: 'Trek Inventory' },
           { key: 'users', label: 'User Accounts' },
+          { key: 'inquiries', label: 'User Tickets / Needs' },
           { key: 'documents', label: 'Verification Queue' },
           { key: 'reviews', label: 'Content Moderation' },
           { key: 'analytics', label: 'Platform Metrics' }
@@ -591,6 +645,90 @@ export default function AdminDashboard() {
               </div>
             </div>
 
+          </div>
+        )}
+
+        {/* TAB 6: User inquiries / Support Tickets */}
+        {activeTab === 'inquiries' && (
+          <div className="flex flex-col gap-4 animate-fadeIn">
+            <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest px-1">Active User Tickets & Needs</h3>
+            
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm card-glow">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-slate-50 dark:bg-slate-950 font-black text-slate-405 uppercase tracking-wider border-b border-slate-100 dark:border-slate-850">
+                  <tr>
+                    <th className="py-3.5 px-6">User</th>
+                    <th className="py-3.5 px-4">Subject</th>
+                    <th className="py-3.5 px-4">Message</th>
+                    <th className="py-3.5 px-4 text-center">Status</th>
+                    <th className="py-3.5 px-6 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-850/80 font-bold text-slate-750 dark:text-slate-300">
+                  {supportTickets.length > 0 ? (
+                    supportTickets.map((tkt) => (
+                      <tr key={tkt.id}>
+                        <td className="py-4 px-6 shrink-0">
+                          <strong className="text-slate-900 dark:text-white block">{tkt.name}</strong>
+                          <span className="text-[10px] text-slate-400 font-semibold">{tkt.email}</span>
+                          <span className="text-[9px] text-slate-455 block font-semibold mt-0.5">{tkt.date}</span>
+                        </td>
+                        <td className="py-4 px-4 font-extrabold text-emerald-500">{tkt.subject}</td>
+                        <td className="py-4 px-4 max-w-sm">
+                          <p className="text-[11px] text-slate-650 dark:text-slate-400 font-semibold leading-relaxed break-words">{tkt.message}</p>
+                        </td>
+                        <td className="py-4 px-4 text-center">
+                          <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+                            tkt.status === 'OPEN'
+                              ? 'bg-amber-500/10 text-amber-500 border border-amber-500/15'
+                              : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/15'
+                          }`}>
+                            {tkt.status}
+                          </span>
+                        </td>
+                        <td className="py-4 px-6 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            {tkt.status === 'OPEN' && (
+                              <button
+                                onClick={() => {
+                                  const updated = supportTickets.map(x => x.id === tkt.id ? { ...x, status: 'RESOLVED' } : x);
+                                  setSupportTickets(updated);
+                                  localStorage.setItem('tv_support_tickets', JSON.stringify(updated));
+                                  confetti({ particleCount: 30, spread: 20 });
+                                }}
+                                className="bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white border border-emerald-500/25 p-1 rounded-lg transition-colors cursor-pointer"
+                                title="Mark as Resolved"
+                              >
+                                <Check className="h-4 w-4 stroke-[3]" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => {
+                                if (confirm("Delete this support ticket?")) {
+                                  const updated = supportTickets.filter(x => x.id !== tkt.id);
+                                  setSupportTickets(updated);
+                                  localStorage.setItem('tv_support_tickets', JSON.stringify(updated));
+                                }
+                              }}
+                              className="bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/25 p-1 rounded-lg transition-colors cursor-pointer"
+                              title="Delete Ticket"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="py-10 text-center text-slate-400">
+                        No support tickets found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
