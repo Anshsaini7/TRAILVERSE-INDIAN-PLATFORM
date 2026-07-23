@@ -84,13 +84,7 @@ export default function AdminDashboard() {
       if (storedTickets) {
         setSupportTickets(JSON.parse(storedTickets));
       } else {
-        // Seed default tickets if empty
-        const defaultTickets = [
-          { id: 'tkt-9012', name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', subject: 'Booking Help', message: 'I want to book Hampta Pass but my payment page is reloading. Can you guide me?', date: '2026-07-21', status: 'OPEN' },
-          { id: 'tkt-9013', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', subject: 'Operator Partnership', message: 'Hello Admin, we uploaded our new Roopkund winter package, please verify our documents.', date: '2026-07-22', status: 'OPEN' }
-        ];
-        localStorage.setItem('tv_support_tickets', JSON.stringify(defaultTickets));
-        setSupportTickets(defaultTickets);
+        setSupportTickets([]);
       }
     } catch (e) {
       console.error(e);
@@ -111,25 +105,13 @@ export default function AdminDashboard() {
   });
 
   // Operators List
-  const [operators, setOperators] = useState([
-    { id: 'indiahikes', name: 'IndiaHikes', verified: true, rating: 4.9, bookings: 420, contact: '+91 9876543210' },
-    { id: 'thrillophilia', name: 'Thrillophilia', verified: true, rating: 4.7, bookings: 880, contact: '+91 8765432109' },
-    { id: 'bikat-adventures', name: 'Bikat Adventures', verified: true, rating: 4.8, bookings: 310, contact: '+91 7654321098' },
-    { id: 'himalayan-cabs', name: 'Himalayan Local Operators', verified: false, rating: 4.2, bookings: 45, contact: '+91 6543210987' }
-  ]);
+  const [operators, setOperators] = useState<any[]>([]);
 
   // Verification documents State
-  const [docQueue, setDocQueue] = useState([
-    { id: 'doc-1', companyName: 'Bikat Adventures', type: 'GST Certificate', value: '05AAAAA1111A1Z1', file: 'gst_bikat.pdf', status: 'PENDING' },
-    { id: 'doc-2', companyName: 'Himalayan Local Operators', type: 'Business License', value: 'LIC/HP/2026/0881', file: 'license_himalayan.pdf', status: 'PENDING' },
-    { id: 'doc-3', companyName: 'IndiaHikes', type: 'GST Certificate', value: '05BBBBB2222B2Z2', file: 'gst_indiahikes.pdf', status: 'APPROVED' }
-  ]);
+  const [docQueue, setDocQueue] = useState<any[]>([]);
 
   // Review moderation list
-  const [moderationReviews, setModerationReviews] = useState([
-    { id: 'rev-2', user: 'Rahul Sharma', rating: 5, comment: 'Juda ka Talab freezing was a visual I will never forget. Climbing the peak was surreal!', trekName: 'Kedarkantha Trek', date: '2026-05-12' },
-    { id: 'rev-3', user: 'Ananya Roy', rating: 4, comment: 'Very physically demanding. Make sure you do your cardio preparation seriously.', trekName: 'Roopkund Trek', date: '2026-05-15' }
-  ]);
+  const [moderationReviews, setModerationReviews] = useState<any[]>([]);
 
   // Statistics calculation
   const stats = useMemo(() => {
@@ -527,45 +509,53 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-850/80 font-bold text-slate-750 dark:text-slate-300">
-                {docQueue.map(doc => (
-                  <tr key={doc.id}>
-                    <td className="py-4 px-6">
-                      <strong className="text-slate-900 dark:text-white">{doc.companyName}</strong>
-                    </td>
-                    <td className="py-4 px-4 font-semibold">{doc.type}</td>
-                    <td className="py-4 px-4 font-mono font-bold">{doc.value}</td>
-                    <td className="py-4 px-4 font-semibold text-emerald-500 hover:underline cursor-pointer">{doc.file}</td>
-                    <td className="py-4 px-4 text-center">
-                      <span className={`px-2.5 py-0.5 rounded text-[9px] font-bold ${
-                        doc.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/15' :
-                        doc.status === 'REJECTED' ? 'bg-rose-500/10 text-rose-600 border border-rose-500/15' :
-                        'bg-amber-500/10 text-amber-600 border border-amber-500/15'
-                      }`}>
-                        {doc.status}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      {doc.status === 'PENDING' ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => handleApproveDoc(doc.id, doc.companyName)}
-                            className="bg-emerald-500 text-white font-bold py-1 px-3 rounded-lg text-[10px] shadow-sm hover:bg-emerald-600 transition-colors cursor-pointer"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => handleRejectDoc(doc.id)}
-                            className="border border-slate-200 dark:border-slate-800 py-1 px-3 rounded-lg text-[10px] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      ) : (
-                        <span className="text-slate-400 text-[10px]">Processed ✓</span>
-                      )}
+                {docQueue.length > 0 ? (
+                  docQueue.map(doc => (
+                    <tr key={doc.id}>
+                      <td className="py-4 px-6">
+                        <strong className="text-slate-900 dark:text-white">{doc.companyName}</strong>
+                      </td>
+                      <td className="py-4 px-4 font-semibold">{doc.type}</td>
+                      <td className="py-4 px-4 font-mono font-bold">{doc.value}</td>
+                      <td className="py-4 px-4 font-semibold text-emerald-500 hover:underline cursor-pointer">{doc.file}</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className={`px-2.5 py-0.5 rounded text-[9px] font-bold ${
+                          doc.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/15' :
+                          doc.status === 'REJECTED' ? 'bg-rose-500/10 text-rose-600 border border-rose-500/15' :
+                          'bg-amber-500/10 text-amber-600 border border-amber-500/15'
+                        }`}>
+                          {doc.status}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        {doc.status === 'PENDING' ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => handleApproveDoc(doc.id, doc.companyName)}
+                              className="bg-emerald-500 text-white font-bold py-1 px-3 rounded-lg text-[10px] shadow-sm hover:bg-emerald-600 transition-colors cursor-pointer"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => handleRejectDoc(doc.id)}
+                              className="border border-slate-200 dark:border-slate-800 py-1 px-3 rounded-lg text-[10px] hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 text-[10px]">Processed ✓</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-10 text-center text-slate-405 font-bold uppercase tracking-wider">
+                      No verification documents pending
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -585,33 +575,41 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-850/80 font-bold text-slate-750 dark:text-slate-300">
-                {moderationReviews.map(rev => (
-                  <tr key={rev.id}>
-                    <td className="py-4 px-6">
-                      <strong className="text-slate-900 dark:text-white block">{rev.user}</strong>
-                      <span className="text-[9px] text-slate-450 block font-bold mt-0.5">{rev.date}</span>
-                    </td>
-                    <td className="py-4 px-4 font-semibold">{rev.trekName}</td>
-                    <td className="py-4 px-4 font-medium text-slate-550 dark:text-slate-400 max-w-xs truncate" title={rev.comment}>
-                      {rev.comment}
-                    </td>
-                    <td className="py-4 px-4 text-center">
-                      <span className="inline-flex items-center gap-0.5 text-amber-500 font-bold">
-                        <Star className="h-3.5 w-3.5 fill-amber-500" />
-                        {rev.rating}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6 text-center">
-                      <button
-                        onClick={() => handleDeleteReview(rev.id)}
-                        className="p-1.5 text-slate-405 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
-                        title="Delete Review"
-                      >
-                        <Trash2 className="h-4.5 w-4.5" />
-                      </button>
+                {moderationReviews.length > 0 ? (
+                  moderationReviews.map(rev => (
+                    <tr key={rev.id}>
+                      <td className="py-4 px-6">
+                        <strong className="text-slate-900 dark:text-white block">{rev.user}</strong>
+                        <span className="text-[9px] text-slate-450 block font-bold mt-0.5">{rev.date}</span>
+                      </td>
+                      <td className="py-4 px-4 font-semibold">{rev.trekName}</td>
+                      <td className="py-4 px-4 font-medium text-slate-550 dark:text-slate-400 max-w-xs truncate" title={rev.comment}>
+                        {rev.comment}
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="inline-flex items-center gap-0.5 text-amber-500 font-bold">
+                          <Star className="h-3.5 w-3.5 fill-amber-500" />
+                          {rev.rating}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6 text-center">
+                        <button
+                          onClick={() => handleDeleteReview(rev.id)}
+                          className="p-1.5 text-slate-405 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                          title="Delete Review"
+                        >
+                          <Trash2 className="h-4.5 w-4.5" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="py-10 text-center text-slate-405 font-bold uppercase tracking-wider">
+                      No reviews submitted
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

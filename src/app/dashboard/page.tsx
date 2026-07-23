@@ -13,6 +13,7 @@ import confetti from 'canvas-confetti';
 import DashboardWeatherWidget from '../../components/weather/DashboardWeatherWidget';
 import { useWeather } from '../../context/WeatherContext';
 import { useAuth } from '../../context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 interface DashboardCertificate {
   id: string;
@@ -60,14 +61,31 @@ export default function UserDashboard() {
   const highestAlt = sessions.reduce((max, sess) => Math.max(max, sess.maxAltitude ?? 0), 0);
   const statesExplored = new Set(sessions.map(s => s.state).filter((st): st is string => !!st && st !== 'Unknown')).size;
 
-  const { user } = useAuth();
-  
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  // Redirect guests to login screen
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth');
+    }
+  }, [user, loading, router]);
+
   // Load bookings from localStorage linked to logged-in user
   const [bookings, setBookings] = useState<any[]>([]);
 
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center font-bold text-xs text-slate-400">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mb-2" />
+        <span>Verifying active session...</span>
+      </div>
+    );
+  }
+
   useEffect(() => {
     try {
-      const email = user?.email || 'abhinav@gmail.com';
+      const email = user?.email || '';
       const stored = localStorage.getItem('tv_bookings');
       let userBookings = [];
       if (stored) {
@@ -75,30 +93,13 @@ export default function UserDashboard() {
         userBookings = allBookings.filter((b: any) => b.userEmail === email);
       }
       
-      // If it is the default user and no bookings exist yet, seed a default booking
-      if (userBookings.length === 0 && email === 'abhinav@gmail.com') {
-        userBookings = [
-          {
-            id: 'b-991',
-            trekId: 'hampta-pass',
-            trekName: 'Hampta Pass',
-            trek: treks[2], // Hampta Pass
-            departureDate: '2026-07-15',
-            persons: 2,
-            price: 19800,
-            status: 'Confirmed',
-            company: trekkingCompanies[2], // Bikat Adventures
-            userEmail: 'abhinav@gmail.com'
-          }
-        ];
-      } else {
-        // Resolve trek objects for any dynamic user bookings
-        userBookings = userBookings.map((b: any) => ({
-          ...b,
-          trek: treks.find(t => t.id === b.trekId) || treks[0],
-          company: trekkingCompanies.find(c => c.id === (treks.find(t => t.id === b.trekId)?.companyId || 'bikat'))
-        }));
-      }
+      // Resolve trek objects for any dynamic user bookings
+      userBookings = userBookings.map((b: any) => ({
+        ...b,
+        trek: treks.find(t => t.id === b.trekId) || treks[0],
+        company: trekkingCompanies.find(c => c.id === (treks.find(t => t.id === b.trekId)?.companyId || 'bikat'))
+      }));
+      
       setBookings(userBookings);
     } catch (err) {
       console.error(err);
@@ -106,39 +107,18 @@ export default function UserDashboard() {
   }, [user]);
 
   const userProfile = {
-    name: user?.name || 'Abhinav Sharma',
+    name: user?.name || 'Hiker',
     avatar: user?.role === 'ADMIN' ? '👑' : user?.role === 'GUIDE' ? '🏕️' : '🥾',
     badge: user?.role === 'ADMIN' ? 'Site Administrator' : user?.role === 'GUIDE' ? 'Certified Guide' : 'Peak Conqueror',
-    altitudeGained: user?.email === 'abhinav@gmail.com' || !user ? 8839 : highestAlt || 0,
-    points: user?.email === 'abhinav@gmail.com' || !user ? 3400 : Math.round(totalKm * 100),
-    completedCount: user?.email === 'abhinav@gmail.com' || !user ? 2 : sessions.length,
+    altitudeGained: highestAlt || 0,
+    points: Math.round(totalKm * 100),
+    completedCount: sessions.length,
     bookingsCount: bookings.length,
-    savedCount: user?.email === 'abhinav@gmail.com' || !user ? 2 : (user?.saved_treks?.length || 0)
+    savedCount: user?.saved_treks?.length || 0
   };
 
   // Dynamic completed adventures (certificates)
   const completions = useMemo(() => {
-    const email = user?.email || 'abhinav@gmail.com';
-    if (email === 'abhinav@gmail.com') {
-      return [
-        {
-          id: 'cert-101',
-          trekId: 'roopkund',
-          trek: treks[0], // Roopkund
-          completionDate: '2025-10-10',
-          maxAltitude: 5029,
-          leader: 'Swathi Chatrapathy'
-        },
-        {
-          id: 'cert-102',
-          trekId: 'kedarkantha',
-          trek: treks[1], // Kedarkantha
-          completionDate: '2026-01-20',
-          maxAltitude: 3810,
-          leader: 'Arjun Majumdar'
-        }
-      ];
-    }
     return sessions.map((s) => ({
       id: `cert-${s.id}`,
       trekId: s.trekId,
@@ -147,14 +127,10 @@ export default function UserDashboard() {
       maxAltitude: s.maxAltitude || 3000,
       leader: 'Self Guided / Tracker Verified'
     }));
-  }, [user, sessions]);
+  }, [sessions]);
 
   // Dynamic wishlist (saved treks)
   const wishlist = useMemo(() => {
-    const email = user?.email || 'abhinav@gmail.com';
-    if (email === 'abhinav@gmail.com') {
-      return [treks[3], treks[4]]; // Chadar, Goechala
-    }
     if (user?.saved_treks) {
       return treks.filter(t => user.saved_treks?.includes(t.id));
     }
