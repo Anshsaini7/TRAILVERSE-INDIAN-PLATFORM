@@ -30,8 +30,8 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      if (!email.toLowerCase().includes('admin')) {
-        throw new Error('Invalid Admin Portal Email address.');
+      if (email.toLowerCase() !== 'trailverse.admin@trailverse.in' || password !== 'TrailVerseAdmin2026!') {
+        throw new Error('Access Denied: Invalid Admin Security ID or Portal Password.');
       }
       
       const res = await login(email, password);
