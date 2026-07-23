@@ -38,6 +38,9 @@ export default function AuthPage() {
 
     try {
       if (mode === 'login') {
+        if (email.toLowerCase().includes('admin')) {
+          throw new Error('Access Denied: Admins must use the secure Admin Login Portal.');
+        }
         const res = await login(email, password);
         confetti({ particleCount: 80, spread: 50 });
         setSuccessMsg('Logged in successfully!');

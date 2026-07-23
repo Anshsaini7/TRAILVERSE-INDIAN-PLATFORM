@@ -9,14 +9,37 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
   const [treks, setTreks] = useState<Trek[]>(initialTreks);
   const [searchTerm, setSearchTerm] = useState('');
   
   // Tab states: 'treks' | 'users' | 'documents' | 'reviews' | 'analytics' | 'inquiries'
   const [activeTab, setActiveTab] = useState<'treks' | 'users' | 'documents' | 'reviews' | 'analytics' | 'inquiries'>('treks');
   const [supportTickets, setSupportTickets] = useState<any[]>([]);
+
+  // Redirect non-admins to the secret login page
+  useEffect(() => {
+    if (!loading && (!user || user.role !== 'ADMIN')) {
+      router.push('/admin/login');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user || user.role !== 'ADMIN') {
+    return (
+      <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center px-4 font-bold text-xs text-slate-400">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500" />
+          <span>Verifying Admin credentials...</span>
+        </div>
+      </div>
+    );
+  }
 
   // User Accounts State
   const [usersList, setUsersList] = useState([

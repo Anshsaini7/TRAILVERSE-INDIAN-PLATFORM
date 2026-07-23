@@ -64,11 +64,11 @@ const MOCK_USERS: Record<string, UserProfile & { password: string }> = {
     city: 'Dehradun',
     bio: 'IMF certified local guiding agency.'
   },
-  'admin@gmail.com': {
+  'trailverse.admin@trailverse.in': {
     id: 'm-usr-3',
-    name: 'System Admin',
-    email: 'admin@gmail.com',
-    password: 'password',
+    name: 'TrailVerse Admin',
+    email: 'trailverse.admin@trailverse.in',
+    password: 'TrailVerseAdmin2026!',
     role: 'ADMIN'
   }
 };
