@@ -262,20 +262,27 @@ export default function AuthPage() {
                 {/* Role Toggle Selector */}
                 <div>
                   <label className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-2">Account Type</label>
-                  <div className="grid grid-cols-2 bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 text-xs font-bold">
+                  <div className="grid grid-cols-3 bg-slate-50 dark:bg-slate-950 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 text-[10px] font-bold">
                     <button
                       type="button"
                       onClick={() => setRole('USER')}
-                      className={`py-2 px-3 rounded-xl transition-all cursor-pointer ${role === 'USER' ? 'bg-white dark:bg-slate-850 text-emerald-500 shadow-sm' : 'text-slate-500'}`}
+                      className={`py-2 px-1 rounded-xl transition-all cursor-pointer text-center ${role === 'USER' ? 'bg-white dark:bg-slate-850 text-emerald-500 shadow-sm' : 'text-slate-500'}`}
                     >
-                      Traveler User
+                      Traveler
                     </button>
                     <button
                       type="button"
                       onClick={() => setRole('GUIDE')}
-                      className={`py-2 px-3 rounded-xl transition-all cursor-pointer ${role === 'GUIDE' ? 'bg-white dark:bg-slate-850 text-emerald-500 shadow-sm' : 'text-slate-500'}`}
+                      className={`py-2 px-1 rounded-xl transition-all cursor-pointer text-center ${role === 'GUIDE' ? 'bg-white dark:bg-slate-850 text-emerald-500 shadow-sm' : 'text-slate-500'}`}
                     >
-                      Trek Operator
+                      Operator
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRole('ADMIN')}
+                      className={`py-2 px-1 rounded-xl transition-all cursor-pointer text-center ${role === 'ADMIN' ? 'bg-white dark:bg-slate-850 text-emerald-500 shadow-sm' : 'text-slate-500'}`}
+                    >
+                      Site Admin
                     </button>
                   </div>
                 </div>
