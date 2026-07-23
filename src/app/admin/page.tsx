@@ -45,8 +45,7 @@ export default function AdminDashboard() {
   const [usersList, setUsersList] = useState([
     { id: 'u-1', name: 'Abhinav Sharma', email: 'abhinav@gmail.com', role: 'USER', username: 'abhinav_conquers', suspended: false, joined: '2026-01-10' },
     { id: 'u-2', name: 'Rahul Sharma', email: 'rahul.sharma@gmail.com', role: 'USER', username: 'rahul_trek', suspended: false, joined: '2026-03-15' },
-    { id: 'u-3', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', role: 'GUIDE', username: 'bikat_guide', suspended: false, joined: '2026-04-20' },
-    { id: 'u-4', name: 'Spam Bot', email: 'spammer99@spam.com', role: 'USER', username: 'spammer_99', suspended: true, joined: '2026-06-01' }
+    { id: 'u-3', name: 'Bikat Adventures Guide', email: 'bikat@gmail.com', role: 'GUIDE', username: 'bikat_guide', suspended: false, joined: '2026-04-20' }
   ]);
   const [userSearchTerm, setUserSearchTerm] = useState('');
 
@@ -132,7 +131,6 @@ export default function AdminDashboard() {
 
   // Review moderation list
   const [moderationReviews, setModerationReviews] = useState([
-    { id: 'rev-1', user: 'Spam Bot', rating: 1, comment: '🚨 CLICK HERE TO BUY BITCOIN ON WWW.SPAM-SITE.COM !!! CHEAP OFFERS 🚨', trekName: 'Roopkund Trek', date: '2026-06-05' },
     { id: 'rev-2', user: 'Rahul Sharma', rating: 5, comment: 'Juda ka Talab freezing was a visual I will never forget. Climbing the peak was surreal!', trekName: 'Kedarkantha Trek', date: '2026-05-12' },
     { id: 'rev-3', user: 'Ananya Roy', rating: 4, comment: 'Very physically demanding. Make sure you do your cardio preparation seriously.', trekName: 'Roopkund Trek', date: '2026-05-15' }
   ]);
