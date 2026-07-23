@@ -398,7 +398,7 @@ export default function TravelerProfilePage() {
 
                 <div className="mt-10 pt-6 border-t border-slate-200 dark:border-slate-850 flex justify-between items-center text-[10px] text-slate-450">
                   <div>
-                    <span className="font-serif italic text-slate-800 dark:text-slate-300 font-bold block mb-1">Abhinav</span>
+                    <span className="font-serif italic text-slate-800 dark:text-slate-300 font-bold block mb-1">{user?.name ? user.name.split(' ')[0] : 'Summiteer'}</span>
                     <span>SUMMITEER RECORD</span>
                   </div>
                   <div>

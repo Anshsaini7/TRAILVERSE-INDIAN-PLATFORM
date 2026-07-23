@@ -53,7 +53,7 @@ export default function ContactModule() {
                     <input
                       type="text"
                       required
-                      placeholder="Abhinav Sharma"
+                      placeholder="Your Full Name"
                       value={name}
                       onChange={e => setName(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl p-2.5 text-xs text-slate-905 dark:text-slate-100 focus:outline-none"
@@ -64,7 +64,7 @@ export default function ContactModule() {
                     <input
                       type="email"
                       required
-                      placeholder="abhinav@example.com"
+                      placeholder="name@domain.com"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
                       className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-855 rounded-xl p-2.5 text-xs text-slate-905 dark:text-slate-100 focus:outline-none"

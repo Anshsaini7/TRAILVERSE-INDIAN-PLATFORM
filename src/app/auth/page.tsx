@@ -196,7 +196,7 @@ export default function AuthPage() {
                         required
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        placeholder="abhinav@gmail.com"
+                        placeholder="name@domain.com"
                         className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
                       />
                     </div>
@@ -287,7 +287,7 @@ export default function AuthPage() {
                         required
                         value={name}
                         onChange={e => setName(e.target.value)}
-                        placeholder="e.g. Abhinav Sharma"
+                        placeholder="e.g. Your Full Name"
                         className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
                       />
                     </div>
@@ -413,7 +413,7 @@ export default function AuthPage() {
                         required
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        placeholder="abhinav@gmail.com"
+                        placeholder="name@domain.com"
                         className="w-full bg-slate-50/50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-400/50"
                       />
                     </div>
